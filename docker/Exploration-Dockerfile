@@ -3,11 +3,15 @@ FROM ubuntu:16.04
 RUN apt update && apt upgrade -y
 RUN apt install -y wget build-essential
 RUN apt install python-pydot python-pydot-ng graphviz -y
-RUN wget https://repo.continuum.io/miniconda/Miniconda2-4.2.12-Linux-x86_64.sh -O miniconda.sh
-RUN bash miniconda.sh -bfp /opt/anaconda
+RUN wget https://repo.continuum.io/miniconda/Miniconda3-4.2.12-Linux-x86_64.sh -O miniconda.sh
+RUN bash miniconda.sh -bfp /opt/anaconda && rm ./miniconda.sh
 ENV PATH /opt/anaconda/bin:$PATH
-COPY ./docker/environment.yml /tmp/environment.yml
-RUN conda env update --file /tmp/environment.yml --name root
-RUN pip install --upgrade requests graphviz
+#COPY ./docker/environment.yml /tmp/environment.yml
+#RUN conda env update --file /tmp/environment.yml --name root
+RUN pip install --upgrade requests graphviz pip s3fs boto3
+RUN conda config --add channels numba
+RUN conda config --add channels conda-forge
+RUN conda install pandas numpy dask distributed matplotlib seaborn cython jupyter notebook ipython scikit-learn
+RUN conda env export --name root > /tmp/environment.yml
 
 WORKDIR /workdir
