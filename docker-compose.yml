@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+
+  exploration-box:
+    image: milesg/cca-exploration:latest
+    build:
+      context: ./
+      dockerfile: ./docker/Exploration-Dockerfile
+    ports:
+      - 8888:8888
+    volumes:
+      - ./:/workdir
+    command: ['jupyter', 'notebook', '--ip', '0.0.0.0', '--allow-root', '--no-browser']
+
