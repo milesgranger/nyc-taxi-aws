@@ -1,2 +1,7 @@
 # Takes a yellow cab taxi data file url and writes to passed s3 bucket.
-
+FROM alpine:3.6
+RUN apk update
+RUN apk add python3-dev py3-pip build-base py3-numpy py3-numpy-f2py
+RUN ln -s /usr/bin/pip3 /usr/bin/pip && ln -s /usr/bin/python3 /usr/bin/python
+RUN pip install --ignore-installed numpy pandas requests beautifulsoup4 -v
+ENTRYPOINT bash
