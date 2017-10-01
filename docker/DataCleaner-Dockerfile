@@ -1,4 +1,7 @@
 FROM milesg/tda-daskworker:latest
 
 RUN pip install boto3 s3fs
-COPY
+COPY . /workdir
+WORKDIR /workdir
+ENV PATH /usr/bin/python:$PATH
+ENV PYTHONPATH /workdir

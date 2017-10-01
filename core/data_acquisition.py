@@ -7,29 +7,11 @@ from typing import Union
 
 requests.adapters.DEFAULT_RETRIES = 10
 
+
 class TaxiData:
 
-    # columns we care about, all dataframes from 'clean_df()' will have these columns
-    columns = [
-        'pickup_datetime',
-        'dropoff_datetime',
-        'tip_amount',
-        'fare_amount',
-        'total_amount',
-        'vendor_id',
-        'passenger_count',
-        'trip_distance',
-        'dropoff_longitude',
-        'dropoff_latitude',
-        'pickup_longitude',
-        'pickup_latitude',
-        'payment_type',
-        'tolls_amount',
-    ]
-
-
-    @classmethod
-    def clean_df(cls, df: pd.DataFrame) -> pd.DataFrame:
+    @staticmethod
+    def clean_df(df) -> pd.DataFrame:
         """
         Clean the dataframe to have self.columns
 
@@ -41,9 +23,41 @@ class TaxiData:
         -------
         pd.DataFrame: cleaned to only have self.columns
         """
-        df.columns = map(lambda col: col.lower().replace('_', '').replace('tpep', ''), df.columns)
-        df = df.rename(columns={col.replace('_', ''): col for col in cls.columns})
-        return df.loc[:, cls.columns]
+
+        columns = [
+            'pickup_datetime',
+            'dropoff_datetime',
+            'tip_amount',
+            'fare_amount',
+            'total_amount',
+            'vendor_id',
+            'passenger_count',
+            'trip_distance',
+            'payment_type',
+            'tolls_amount',
+        ]
+
+        df.columns = [col.lower() for col in df.columns]
+        df = df.rename(columns={'vendor_name': 'vendor_id',
+                                'total_amt': 'total_amount',
+                                'tolls_amt': 'tolls_amount',
+                                'fare_amt': 'fare_amount',
+                                'tip_amt': 'tip_amount',
+                                'trip_pickup_datetime': 'pickup_datetime',
+                                'trip_dropoff_datetime': 'dropoff_datetime'
+                                })
+        df.columns = map(lambda col:
+                         col.strip().replace('_', '').replace('tpep', ''),
+                         df.columns
+                         )
+        df = df.rename(columns={col.replace('_', ''): col for col in columns})
+        df = df.loc[:, columns]
+
+        # Convert date columns
+        for date_col in ['pickup_datetime', 'dropoff_datetime']:
+            df[date_col] = pd.to_datetime(df[date_col], yearfirst=True, errors='coerce')
+
+        return df
 
 
     @classmethod

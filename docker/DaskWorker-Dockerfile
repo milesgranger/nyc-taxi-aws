@@ -6,5 +6,7 @@ RUN ln -s /usr/bin/pip3 /usr/bin/pip && ln -s /usr/bin/python3 /usr/bin/python
 RUN pip install --ignore-installed numpy scipy pandas dask distributed requests beautifulsoup4 zict
 RUN pip install bokeh s3fs
 COPY . /workdir
+ENV PATH /usr/bin/python:$PATH
+ENV PYTHONPATH /workdir
 
 WORKDIR /workdir
