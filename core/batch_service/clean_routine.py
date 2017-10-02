@@ -53,52 +53,17 @@ class CleanRoutine(TaxiData):
         Entry point for cleaning process
         """
         print('Fetching file: ', self.s3_input)
-        df = self._read_file()
+        df = self.read_file()
         print('Mapping partitions over cleaning...')
         df = df.map_partitions(self.clean_df)
         print('Saving file to ' + self.s3_output_bucket)
-        df = df.repartition(npartitions=4)
         self._deposit_file(df)
 
-    def _read_file(self) -> dd.DataFrame:
+    def read_file(self) -> dd.DataFrame:
         """ 
         Grab the remote s3 file
         """
-        # From 2016-07 thru 2016-12, the header is missing a few columns, these are the correct ones for that
-        # time period
-        bad_2016_cols = ['vendorid',
-                         'tpep_pickup_datetime',
-                         'tpep_dropoff_datetime',
-                         'passenger_count',
-                         'trip_distance',
-                         'pickup_longitude',
-                         'pickup_latitude',
-                         'ratecodeid',
-                         'store_and_fwd_flag',
-                         'dropoff_longitude',
-                         'dropoff_latitude',
-                         'payment_type',
-                         'fare_amount',
-                         'extra',
-                         'mta_tax',
-                         'tip_amount',
-                         'tolls_amount',
-                         'improvement_surcharge',
-                         'total_amount']
-
-        year, month = self.s3_input[-11:-4].split('-')
-        if year == '2016' and month in ['07', '08', '09', '10', '11', '12']:
-            df = dd.read_csv(self.s3_input,
-                             dtype='object',
-                             header=0,
-                             names=bad_2016_cols,
-                             error_bad_lines=False,
-                             blocksize=int(128e6))
-        else:
-            df = dd.read_csv(self.s3_input,
-                             dtype='object',
-                             error_bad_lines=False,
-                             blocksize=int(128e6))
+        df = super().read_file(self.s3_input)
         return df
 
     def _deposit_file(self, df: dd.DataFrame) -> None:
@@ -109,6 +74,7 @@ class CleanRoutine(TaxiData):
         fname = os.path.basename(self.s3_input).replace(year, '{year}-*'.format(year=year))
         fname = '{bucket}/{fname}.gz'.format(bucket=self.s3_output_bucket, fname=fname)
         print('Saving file as: ' + fname)
+        df = df.repartition(npartitions=4)
         df.to_csv(fname, compression='gzip', index=False)
 
     def _clean_df(self, df: pd.DataFrame) -> pd.DataFrame:

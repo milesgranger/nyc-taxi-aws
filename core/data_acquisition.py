@@ -1,7 +1,9 @@
 import io
 import bs4
 import requests
+import numpy as np
 import pandas as pd
+import dask.dataframe as dd
 from datetime import datetime
 from typing import Union
 
@@ -57,6 +59,62 @@ class TaxiData:
         for date_col in ['pickup_datetime', 'dropoff_datetime']:
             df[date_col] = pd.to_datetime(df[date_col], yearfirst=True, errors='coerce')
 
+        # Convert numberical columns
+        def convert(val):
+            try:
+                return round(float(val), 2)
+            except:
+                return np.NaN
+        for num_col in filter(lambda col: col.endswith('amount') or col.endswith('count') or col.endswith('distance'),
+                              df.columns):
+            df[num_col] = df[num_col].map(convert)
+
+        # Fill all nulls with ''
+        df = df.fillna(value='')
+
+        return df
+
+    @staticmethod
+    def read_file(s3_input) -> dd.DataFrame:
+        """
+        Grab the remote s3 file
+        s3_input: s3 uri to data file.
+        """
+        # From 2016-07 thru 2016-12, the header is missing a few columns, these are the correct ones for that
+        # time period
+        bad_2016_cols = ['vendorid',
+                         'tpep_pickup_datetime',
+                         'tpep_dropoff_datetime',
+                         'passenger_count',
+                         'trip_distance',
+                         'pickup_longitude',
+                         'pickup_latitude',
+                         'ratecodeid',
+                         'store_and_fwd_flag',
+                         'dropoff_longitude',
+                         'dropoff_latitude',
+                         'payment_type',
+                         'fare_amount',
+                         'extra',
+                         'mta_tax',
+                         'tip_amount',
+                         'tolls_amount',
+                         'improvement_surcharge',
+                         'total_amount']
+
+        year, month = s3_input[-11:-4].split('-')
+        if year == '2016' and month in ['07', '08', '09', '10', '11', '12']:
+            df = dd.read_csv(s3_input,
+                             dtype='object',
+                             header=0,
+                             names=bad_2016_cols,
+                             error_bad_lines=False,
+                             blocksize=int(128e6))
+        else:
+            df = dd.read_csv(s3_input,
+                             dtype='object',
+                             error_bad_lines=False,
+                             blocksize=int(128e6))
         return df
 
 

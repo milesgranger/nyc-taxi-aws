@@ -1,0 +1,4 @@
+FROM xemuliam/zeppelin
+
+RUN wget http://s3.amazonaws.com/redshift-downloads/drivers/RedshiftJDBC42-1.2.8.1005.jar -O redshift-jdbc.jar
+RUN mv ./redshift-jdbc.jar /opt/redshift-jdbc.jar
