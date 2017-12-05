@@ -4,7 +4,7 @@ RUN apk update -y
 RUN apk add python3-dev py3-pip py3-numpy py3-numpy-f2py openblas-dev linux-headers build-base
 RUN ln -s /usr/bin/pip3 /usr/bin/pip && ln -s /usr/bin/python3.6 /usr/bin/python
 RUN pip install --ignore-installed numpy scipy pandas dask distributed requests beautifulsoup4 zict
-RUN pip install bokeh s3fs
+RUN pip install bokeh s3fs scikit-learn dask-xgboost
 COPY . /workdir
 ENV PATH /usr/bin/python:$PATH
 ENV PYTHONPATH /workdir
