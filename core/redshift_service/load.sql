@@ -1,3 +1,5 @@
+
+
 CREATE TABLE taxi_trips (
   VendorID              INT        NULL,
   tpep_pickup_datetime  TIMESTAMP,
@@ -20,7 +22,7 @@ CREATE TABLE taxi_trips (
   total_amount          FLOAT      NULL
 );
 
-
+-- Copy data from s3
 COPY taxi_trips FROM 's3://milesg-taxi-data-east/yellow'
     IAM_ROLE 'arn:aws:iam::755632011865:role/redshift-role'
     DELIMITER ','
@@ -30,6 +32,7 @@ COPY taxi_trips FROM 's3://milesg-taxi-data-east/yellow'
     IGNOREHEADER 1
 ;
 
+-- Create loadview to find any loading errors
 CREATE VIEW loadview AS
   (SELECT DISTINCT
      tbl,
@@ -44,6 +47,14 @@ CREATE VIEW loadview AS
    FROM stl_load_errors sl, stv_tbl_perm sp
    WHERE sl.tbl = sp.id);
 
+-- See any errors
 SELECT * FROM loadview;
 
-SELECT * FROM taxi_trips LIMIT 10;
+-- Number of records
+SELECT COUNT(*) FROM taxi_trips;
+
+-- Passenger counts mean tip groupting
+SELECT passenger_count, AVG(tip_amount)
+FROM taxi_trips
+GROUP BY passenger_count
+ORDER BY passenger_count ASC;
