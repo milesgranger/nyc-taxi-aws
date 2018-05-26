@@ -160,7 +160,7 @@ Resources:
             export PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/ec2-user/.local/bin:/home/ec2-user/bin
             export EXTERNAL_IP=${EIP}
             yum update -y
-            yum install -y docker git python36 python36-devel
+            yum install -y docker git python36 python36-devel graphviz
             yum groupinstall -y 'Development Tools'
 
             service docker start
@@ -173,7 +173,7 @@ Resources:
             python36 -m pip install -r ./requirements.txt
             echo "Launching jupyter!"
             nohup jupyter notebook --NotebookApp.token='${NotebookTokenParam}' --ip=0.0.0.0 --no-browser --allow-root &
-            echo "Jupyter running in screen!"
+            echo "Jupyter running!"
 
           - NotebookTokenParam:
               !Ref NotebookToken

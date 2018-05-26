@@ -8,12 +8,14 @@ certifi==2017.11.5
 chardet==3.0.4
 click==6.7
 cloudpickle==0.5.2
+cycler==0.10.0
 dask==0.16.0
 dask-xgboost==0.1.5
 decorator==4.3.0
 distributed==1.20.1
 docutils==0.14
 entrypoints==0.2.3
+graphviz==0.8.3
 HeapDict==1.0.0
 html5lib==1.0.1
 idna==2.6
@@ -29,7 +31,9 @@ jupyter==1.0.0
 jupyter-client==5.2.3
 jupyter-console==5.2.0
 jupyter-core==4.4.0
+kiwisolver==1.0.1
 MarkupSafe==1.0
+matplotlib==2.2.2
 mistune==0.8.3
 msgpack-python==0.4.8
 nbconvert==5.3.1
@@ -45,6 +49,7 @@ prompt-toolkit==1.0.15
 psutil==5.4.1
 ptyprocess==0.5.2
 Pygments==2.2.0
+pyparsing==2.2.0
 python-dateutil==2.6.1
 pytz==2017.3
 PyYAML==3.12
@@ -55,6 +60,7 @@ s3fs==0.1.2
 s3transfer==0.1.12
 scikit-learn==0.19.1
 scipy==1.0.0
+seaborn==0.8.1
 Send2Trash==1.5.0
 simplegeneric==0.8.1
 six==1.11.0
