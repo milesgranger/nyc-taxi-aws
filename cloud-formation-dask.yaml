@@ -156,11 +156,12 @@ Resources:
         Fn::Base64: !Sub
           - |
             #!/bin/bash -ex
+
             exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
             export PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/ec2-user/.local/bin:/home/ec2-user/bin
-            export EXTERNAL_IP=${EIP}
+
             yum update -y
-            yum install -y docker git python36 python36-devel graphviz
+            yum install -y docker git
             yum groupinstall -y 'Development Tools'
 
             service docker start
@@ -169,11 +170,7 @@ Resources:
             echo "Cloning in directory: " $(pwd)
             git clone https://github.com/milesgranger/nyc-taxi-aws.git
             cd ./nyc-taxi-aws
-            python36 -m pip install --upgrade pip==10.0.1
-            python36 -m pip install -r ./requirements.txt
-            echo "Launching jupyter!"
-            nohup jupyter notebook --NotebookApp.token='${NotebookTokenParam}' --ip=0.0.0.0 --no-browser --allow-root &
-            echo "Jupyter running!"
+            docker run -d --network=host -v $(pwd):/code milesg/tda-daskworker:latest jupyter notebook --NotebookApp.token='${NotebookTokenParam}' --ip=0.0.0.0 --no-browser --allow-root
 
           - NotebookTokenParam:
               !Ref NotebookToken
@@ -183,6 +180,9 @@ Resources:
       Tags:
         - Key: Name
           Value: !Join ['-', [!Ref DeploymentPrefix, 'Scheduler']]
+
+
+  ###### Workers! ######
 
   Worker1:
     Type: AWS::EC2::Instance
@@ -238,4 +238,458 @@ Resources:
           Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker2']]
 
 
+  Worker3:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
 
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker3']]
+
+
+  Worker4:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker4']]
+
+
+  Worker5:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker5']]
+
+  Worker6:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker6']]
+
+
+  Worker7:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker7']]
+
+
+  Worker8:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker8']]
+
+
+  Worker9:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker9']]
+
+
+  Worker10:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker10']]
+
+
+  Worker11:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker11']]
+
+
+  Worker12:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker12']]
+
+
+  Worker13:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker13']]
+
+
+  Worker14:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker14']]
+
+  Worker15:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker15']]
+
+
+  Worker16:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker16']]
+
+
+  Worker17:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker17']]
+
+
+  Worker18:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker18']]
+
+
+  Worker19:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker19']]

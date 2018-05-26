@@ -1,12 +1,11 @@
-FROM alpine:3.6
-
-RUN apk update -y
-RUN apk add python3-dev py3-pip py3-numpy py3-numpy-f2py openblas-dev linux-headers build-base
-RUN ln -s /usr/bin/pip3 /usr/bin/pip && ln -s /usr/bin/python3.6 /usr/bin/python
-RUN pip install --ignore-installed numpy scipy pandas dask distributed requests beautifulsoup4 zict
-RUN pip install bokeh s3fs scikit-learn dask-xgboost
-COPY . /workdir
+FROM python:3.6
+RUN apt update
+RUN apt install -y git graphviz
+RUN pip install --upgrade pip==10.0.1
+WORKDIR /code
+COPY ./requirements.txt /code/
+RUN pip install -r ./requirements.txt
+COPY . /code
 ENV PATH /usr/bin/python:$PATH
-ENV PYTHONPATH /workdir
+ENV PYTHONPATH /code
 
-WORKDIR /workdir
