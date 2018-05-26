@@ -1,0 +1,164 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Dask Cluster Setup for NYC Taxi Data Analysis
+
+
+Parameters:
+
+  DeploymentPrefix:
+    Type: String
+    Description: Prefix to assign to all resources created in this stack
+
+  NotebookToken:
+    Type: String
+    Description: Token for Jupyter Notebook Auth on Dask Scheduler instance <Public IP>:8888?token=<token>
+
+
+
+Resources:
+
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'DASK']]
+
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'DASK']]
+
+
+  GatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+
+  RouteTablePublic:
+    Type: AWS::EC2::RouteTable
+    DependsOn: VPC
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'DASK-Public-Route-Table']]
+
+
+  RoutePublic:
+    Type: AWS::EC2::Route
+    DependsOn:
+      - RouteTablePublic
+      - InternetGateway
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      RouteTableId: !Ref RouteTablePublic
+      GatewayId: !Ref InternetGateway
+
+
+  SubnetPublicA:
+    Type: AWS::EC2::Subnet
+    DependsOn: VPC
+    Properties:
+      CidrBlock: 10.0.0.0/24
+      MapPublicIpOnLaunch: true
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'DASK-SubnetPublicA']]
+
+
+  SubnetPublicARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    DependsOn:
+      - RouteTablePublic
+      - SubnetPublicA
+    Properties:
+      RouteTableId: !Ref RouteTablePublic
+      SubnetId: !Ref SubnetPublicA
+
+
+  SecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    DependsOn: SecurityGroup
+    Properties:
+      Description: Allow all resources with this security group to talk to eachother
+      SourceSecurityGroupId: !Ref SecurityGroup
+      FromPort: -1
+      ToPort: -1
+      GroupId: !Ref SecurityGroup
+      IpProtocol: -1
+
+
+  SecurityGroupIngressWebViews:
+    Type: AWS::EC2::SecurityGroupIngress
+    DependsOn: SecurityGroup
+    Properties:
+      Description: Allow any ip to see ports 8786 thru 8888
+      SourceSecurityGroupId: !Ref SecurityGroup
+      FromPort: 8786
+      ToPort: 8888
+      GroupId: !Ref SecurityGroup
+      IpProtocol: -1
+
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Join ['-', [!Ref DeploymentPrefix, 'DASK-SG-Default']]
+      GroupDescription: The default security group
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'DASK-SecurityGroup-Default']]
+
+  ElasticIP:
+    Type: AWS::EC2::EIP
+
+  EIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    DependsOn: DaskScheduler
+    Properties:
+      EIP: !Ref ElasticIP
+      InstanceId: !Ref DaskScheduler
+      PrivateIpAddress: 10.0.0.5
+
+
+  DaskScheduler:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: "t2.medium"
+      PrivateIpAddress: 10.0.0.5
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+          - |
+            yum update -y
+            yum install -y docker screen git python36 python36-devel
+            yum groupinstall 'Development Tools'
+
+            service docker start
+            docker run -d --network=host milesg/tda-daskworker:latest dask-scheduler
+
+            git clone https://github.com/milesgranger/nyc-taxi-aws.git
+            cd ./nyc-taxi-aws.git
+            pyhton36 -m pip install --upgrade pip==10.0.1
+            python36 -m pip install -r ./requirements.txt
+            screen jupyter-screen python36 -m jupyter notebook --NotebookApp.token='${TOKEN_PARM}' --ip 0.0.0.0 --no-browser
+          - {TOKEN_PARAM: !Ref NotebookToken}
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'DASK-Scheduler']]
+
