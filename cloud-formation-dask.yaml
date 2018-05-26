@@ -12,6 +12,16 @@ Parameters:
     Type: String
     Description: Token for Jupyter Notebook Auth on Dask Scheduler instance <Public IP>:8888?token=<token>
 
+  InstanceType:
+    Type: String
+    Description: Instance type to use for Scheduler and Workers
+    Default: m5.2xlarge
+
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: KeyPair name to use to ssh into Scheduler
+    Default: ''
+
 
 
 Resources:
@@ -102,8 +112,8 @@ Resources:
     Type: AWS::EC2::SecurityGroupIngress
     DependsOn: SecurityGroup
     Properties:
+      CidrIp: 0.0.0.0/0
       Description: Allow any ip to see ports 8786 thru 8888
-      SourceSecurityGroupId: !Ref SecurityGroup
       FromPort: 8786
       ToPort: 8888
       GroupId: !Ref SecurityGroup
@@ -141,24 +151,91 @@ Resources:
       SecurityGroupIds:
         - !Ref SecurityGroup
       SubnetId: !Ref SubnetPublicA
+      KeyName: !Ref KeyName
       UserData:
         Fn::Base64: !Sub
           - |
+            #!/bin/bash -ex
+            exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+            export PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/aws/bin:/home/ec2-user/.local/bin:/home/ec2-user/bin
+            export EXTERNAL_IP=${EIP}
             yum update -y
-            yum install -y docker screen git python36 python36-devel
-            yum groupinstall 'Development Tools'
+            yum install -y docker git python36 python36-devel
+            yum groupinstall -y 'Development Tools'
 
             service docker start
             docker run -d --network=host milesg/tda-daskworker:latest dask-scheduler
 
+            echo "Cloning in directory: " $(pwd)
             git clone https://github.com/milesgranger/nyc-taxi-aws.git
-            cd ./nyc-taxi-aws.git
-            pyhton36 -m pip install --upgrade pip==10.0.1
+            cd ./nyc-taxi-aws
+            python36 -m pip install --upgrade pip==10.0.1
             python36 -m pip install -r ./requirements.txt
-            screen jupyter-screen python36 -m jupyter notebook --NotebookApp.token='${TOKEN_PARM}' --ip 0.0.0.0 --no-browser
-          - {TOKEN_PARAM: !Ref NotebookToken}
+            echo "Launching jupyter!"
+            nohup jupyter notebook --NotebookApp.token='${NotebookTokenParam}' --ip=0.0.0.0 --no-browser --allow-root &
+            echo "Jupyter running in screen!"
+
+          - NotebookTokenParam:
+              !Ref NotebookToken
+            EIP:
+              !Ref ElasticIP
 
       Tags:
         - Key: Name
-          Value: !Join ['-', [!Ref DeploymentPrefix, 'DASK-Scheduler']]
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Scheduler']]
+
+  Worker1:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker1']]
+
+
+  Worker2:
+    Type: AWS::EC2::Instance
+    DependsOn: DaskScheduler
+    Properties:
+      ImageId: ami-ca0135b3
+      InstanceType: !Ref InstanceType
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref SubnetPublicA
+      UserData:
+        Fn::Base64: !Sub
+         - |
+           #!/bin/bash -ex
+           exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+           yum update -y
+           yum install -y docker
+
+           service docker start
+           docker run -d --network=host milesg/tda-daskworker:latest dask-worker ${SCHEDULER_IP} --nanny
+         - SCHEDULER_IP: 10.0.0.5:8786
+
+
+      Tags:
+        - Key: Name
+          Value: !Join ['-', [!Ref DeploymentPrefix, 'Worker2']]
+
+
 
