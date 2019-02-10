@@ -172,6 +172,12 @@ Resources:
             cd ./nyc-taxi-aws
             docker run -d --network=host -v $(pwd):/code milesg/tda-daskworker:latest jupyter notebook --NotebookApp.token='${NotebookTokenParam}' --ip=0.0.0.0 --no-browser --allow-root
 
+            echo "Starting influx and grafana stack"
+            curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            chmod +x /usr/local/bin/docker-compose
+            cd ./influx-grafana
+            docker-compose up -d
+
           - NotebookTokenParam:
               !Ref NotebookToken
             EIP:
