@@ -1,0 +1,345 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": [
+      {
+        "id": "Tree",
+        "path": "Tree"
+      },
+      {
+        "id": "aws-stack",
+        "path": "aws-stack",
+        "children": [
+          {
+            "id": "DaskVPC",
+            "path": "aws-stack/DaskVPC",
+            "children": [
+              {
+                "id": "Resource",
+                "path": "aws-stack/DaskVPC/Resource"
+              },
+              {
+                "id": "PublicSubnet1",
+                "path": "aws-stack/DaskVPC/PublicSubnet1",
+                "children": [
+                  {
+                    "id": "Subnet",
+                    "path": "aws-stack/DaskVPC/PublicSubnet1/Subnet"
+                  },
+                  {
+                    "id": "Acl",
+                    "path": "aws-stack/DaskVPC/PublicSubnet1/Acl"
+                  },
+                  {
+                    "id": "RouteTable",
+                    "path": "aws-stack/DaskVPC/PublicSubnet1/RouteTable"
+                  },
+                  {
+                    "id": "RouteTableAssociation",
+                    "path": "aws-stack/DaskVPC/PublicSubnet1/RouteTableAssociation"
+                  },
+                  {
+                    "id": "DefaultRoute",
+                    "path": "aws-stack/DaskVPC/PublicSubnet1/DefaultRoute"
+                  },
+                  {
+                    "id": "EIP",
+                    "path": "aws-stack/DaskVPC/PublicSubnet1/EIP"
+                  },
+                  {
+                    "id": "NATGateway",
+                    "path": "aws-stack/DaskVPC/PublicSubnet1/NATGateway"
+                  }
+                ]
+              },
+              {
+                "id": "PublicSubnet2",
+                "path": "aws-stack/DaskVPC/PublicSubnet2",
+                "children": [
+                  {
+                    "id": "Subnet",
+                    "path": "aws-stack/DaskVPC/PublicSubnet2/Subnet"
+                  },
+                  {
+                    "id": "Acl",
+                    "path": "aws-stack/DaskVPC/PublicSubnet2/Acl"
+                  },
+                  {
+                    "id": "RouteTable",
+                    "path": "aws-stack/DaskVPC/PublicSubnet2/RouteTable"
+                  },
+                  {
+                    "id": "RouteTableAssociation",
+                    "path": "aws-stack/DaskVPC/PublicSubnet2/RouteTableAssociation"
+                  },
+                  {
+                    "id": "DefaultRoute",
+                    "path": "aws-stack/DaskVPC/PublicSubnet2/DefaultRoute"
+                  },
+                  {
+                    "id": "EIP",
+                    "path": "aws-stack/DaskVPC/PublicSubnet2/EIP"
+                  },
+                  {
+                    "id": "NATGateway",
+                    "path": "aws-stack/DaskVPC/PublicSubnet2/NATGateway"
+                  }
+                ]
+              },
+              {
+                "id": "PrivateSubnet1",
+                "path": "aws-stack/DaskVPC/PrivateSubnet1",
+                "children": [
+                  {
+                    "id": "Subnet",
+                    "path": "aws-stack/DaskVPC/PrivateSubnet1/Subnet"
+                  },
+                  {
+                    "id": "Acl",
+                    "path": "aws-stack/DaskVPC/PrivateSubnet1/Acl"
+                  },
+                  {
+                    "id": "RouteTable",
+                    "path": "aws-stack/DaskVPC/PrivateSubnet1/RouteTable"
+                  },
+                  {
+                    "id": "RouteTableAssociation",
+                    "path": "aws-stack/DaskVPC/PrivateSubnet1/RouteTableAssociation"
+                  },
+                  {
+                    "id": "DefaultRoute",
+                    "path": "aws-stack/DaskVPC/PrivateSubnet1/DefaultRoute"
+                  }
+                ]
+              },
+              {
+                "id": "PrivateSubnet2",
+                "path": "aws-stack/DaskVPC/PrivateSubnet2",
+                "children": [
+                  {
+                    "id": "Subnet",
+                    "path": "aws-stack/DaskVPC/PrivateSubnet2/Subnet"
+                  },
+                  {
+                    "id": "Acl",
+                    "path": "aws-stack/DaskVPC/PrivateSubnet2/Acl"
+                  },
+                  {
+                    "id": "RouteTable",
+                    "path": "aws-stack/DaskVPC/PrivateSubnet2/RouteTable"
+                  },
+                  {
+                    "id": "RouteTableAssociation",
+                    "path": "aws-stack/DaskVPC/PrivateSubnet2/RouteTableAssociation"
+                  },
+                  {
+                    "id": "DefaultRoute",
+                    "path": "aws-stack/DaskVPC/PrivateSubnet2/DefaultRoute"
+                  }
+                ]
+              },
+              {
+                "id": "IGW",
+                "path": "aws-stack/DaskVPC/IGW"
+              },
+              {
+                "id": "VPCGW",
+                "path": "aws-stack/DaskVPC/VPCGW"
+              }
+            ]
+          },
+          {
+            "id": "sg-daskSecurityGrp",
+            "path": "aws-stack/sg-daskSecurityGrp"
+          },
+          {
+            "id": "daskSecurityIngress",
+            "path": "aws-stack/daskSecurityIngress"
+          },
+          {
+            "id": "daskSecurityIngressWeb",
+            "path": "aws-stack/daskSecurityIngressWeb"
+          },
+          {
+            "id": "daskSecurityEgress",
+            "path": "aws-stack/daskSecurityEgress"
+          },
+          {
+            "id": "DaskCluster",
+            "path": "aws-stack/DaskCluster",
+            "children": [
+              {
+                "id": "Resource",
+                "path": "aws-stack/DaskCluster/Resource"
+              },
+              {
+                "id": "DefaultServiceDiscoveryNamespace",
+                "path": "aws-stack/DaskCluster/DefaultServiceDiscoveryNamespace",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/DaskCluster/DefaultServiceDiscoveryNamespace/Resource"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "workerTaskDefinition",
+            "path": "aws-stack/workerTaskDefinition",
+            "children": [
+              {
+                "id": "TaskRole",
+                "path": "aws-stack/workerTaskDefinition/TaskRole",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/workerTaskDefinition/TaskRole/Resource"
+                  }
+                ]
+              },
+              {
+                "id": "Resource",
+                "path": "aws-stack/workerTaskDefinition/Resource"
+              },
+              {
+                "id": "workerContainer",
+                "path": "aws-stack/workerTaskDefinition/workerContainer",
+                "children": [
+                  {
+                    "id": "LogGroup",
+                    "path": "aws-stack/workerTaskDefinition/workerContainer/LogGroup",
+                    "children": [
+                      {
+                        "id": "Resource",
+                        "path": "aws-stack/workerTaskDefinition/workerContainer/LogGroup/Resource"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ExecutionRole",
+                "path": "aws-stack/workerTaskDefinition/ExecutionRole",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/workerTaskDefinition/ExecutionRole/Resource"
+                  },
+                  {
+                    "id": "DefaultPolicy",
+                    "path": "aws-stack/workerTaskDefinition/ExecutionRole/DefaultPolicy",
+                    "children": [
+                      {
+                        "id": "Resource",
+                        "path": "aws-stack/workerTaskDefinition/ExecutionRole/DefaultPolicy/Resource"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "worker",
+            "path": "aws-stack/worker",
+            "children": [
+              {
+                "id": "Service",
+                "path": "aws-stack/worker/Service"
+              },
+              {
+                "id": "CloudmapService",
+                "path": "aws-stack/worker/CloudmapService",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/worker/CloudmapService/Resource"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "schedulerTaskDefinition",
+            "path": "aws-stack/schedulerTaskDefinition",
+            "children": [
+              {
+                "id": "TaskRole",
+                "path": "aws-stack/schedulerTaskDefinition/TaskRole",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/schedulerTaskDefinition/TaskRole/Resource"
+                  }
+                ]
+              },
+              {
+                "id": "Resource",
+                "path": "aws-stack/schedulerTaskDefinition/Resource"
+              },
+              {
+                "id": "schedulerContainer",
+                "path": "aws-stack/schedulerTaskDefinition/schedulerContainer",
+                "children": [
+                  {
+                    "id": "LogGroup",
+                    "path": "aws-stack/schedulerTaskDefinition/schedulerContainer/LogGroup",
+                    "children": [
+                      {
+                        "id": "Resource",
+                        "path": "aws-stack/schedulerTaskDefinition/schedulerContainer/LogGroup/Resource"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ExecutionRole",
+                "path": "aws-stack/schedulerTaskDefinition/ExecutionRole",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/schedulerTaskDefinition/ExecutionRole/Resource"
+                  },
+                  {
+                    "id": "DefaultPolicy",
+                    "path": "aws-stack/schedulerTaskDefinition/ExecutionRole/DefaultPolicy",
+                    "children": [
+                      {
+                        "id": "Resource",
+                        "path": "aws-stack/schedulerTaskDefinition/ExecutionRole/DefaultPolicy/Resource"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "scheduler",
+            "path": "aws-stack/scheduler",
+            "children": [
+              {
+                "id": "Service",
+                "path": "aws-stack/scheduler/Service"
+              },
+              {
+                "id": "CloudmapService",
+                "path": "aws-stack/scheduler/CloudmapService",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/scheduler/CloudmapService/Resource"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

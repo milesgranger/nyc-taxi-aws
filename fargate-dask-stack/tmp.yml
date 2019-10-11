@@ -1,0 +1,625 @@
+Resources:
+  DaskVPC2EFDA1EC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC
+  DaskVPCPublicSubnet1SubnetBAEBDFDE:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/18
+      VpcId:
+        Ref: DaskVPC2EFDA1EC
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC/PublicSubnet1
+        - Key: aws-cdk:subnet-name
+          Value: Public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+  DaskVPCPublicSubnet1RouteTableC3FD7C22:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: DaskVPC2EFDA1EC
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC/PublicSubnet1
+  DaskVPCPublicSubnet1RouteTableAssociation8746EB6C:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: DaskVPCPublicSubnet1RouteTableC3FD7C22
+      SubnetId:
+        Ref: DaskVPCPublicSubnet1SubnetBAEBDFDE
+  DaskVPCPublicSubnet1DefaultRoute19C90886:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: DaskVPCPublicSubnet1RouteTableC3FD7C22
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: DaskVPCIGWF1821BC8
+    DependsOn:
+      - DaskVPCVPCGWA7798F51
+  DaskVPCPublicSubnet1EIP9DB75489:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+  DaskVPCPublicSubnet1NATGateway471934E4:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - DaskVPCPublicSubnet1EIP9DB75489
+          - AllocationId
+      SubnetId:
+        Ref: DaskVPCPublicSubnet1SubnetBAEBDFDE
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC/PublicSubnet1
+  DaskVPCPublicSubnet2SubnetDCC064E3:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.64.0/18
+      VpcId:
+        Ref: DaskVPC2EFDA1EC
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC/PublicSubnet2
+        - Key: aws-cdk:subnet-name
+          Value: Public
+        - Key: aws-cdk:subnet-type
+          Value: Public
+  DaskVPCPublicSubnet2RouteTable894C9C23:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: DaskVPC2EFDA1EC
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC/PublicSubnet2
+  DaskVPCPublicSubnet2RouteTableAssociationA81199D0:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: DaskVPCPublicSubnet2RouteTable894C9C23
+      SubnetId:
+        Ref: DaskVPCPublicSubnet2SubnetDCC064E3
+  DaskVPCPublicSubnet2DefaultRoute8028BFB3:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: DaskVPCPublicSubnet2RouteTable894C9C23
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: DaskVPCIGWF1821BC8
+    DependsOn:
+      - DaskVPCVPCGWA7798F51
+  DaskVPCPublicSubnet2EIP7C98DF0D:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+  DaskVPCPublicSubnet2NATGateway24794936:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId:
+        Fn::GetAtt:
+          - DaskVPCPublicSubnet2EIP7C98DF0D
+          - AllocationId
+      SubnetId:
+        Ref: DaskVPCPublicSubnet2SubnetDCC064E3
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC/PublicSubnet2
+  DaskVPCPrivateSubnet1Subnet428E411A:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.128.0/18
+      VpcId:
+        Ref: DaskVPC2EFDA1EC
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC/PrivateSubnet1
+        - Key: aws-cdk:subnet-name
+          Value: Private
+        - Key: aws-cdk:subnet-type
+          Value: Private
+  DaskVPCPrivateSubnet1RouteTable597A5E35:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: DaskVPC2EFDA1EC
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC/PrivateSubnet1
+  DaskVPCPrivateSubnet1RouteTableAssociation576CCEDB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: DaskVPCPrivateSubnet1RouteTable597A5E35
+      SubnetId:
+        Ref: DaskVPCPrivateSubnet1Subnet428E411A
+  DaskVPCPrivateSubnet1DefaultRouteD6098CBE:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: DaskVPCPrivateSubnet1RouteTable597A5E35
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: DaskVPCPublicSubnet1NATGateway471934E4
+  DaskVPCPrivateSubnet2Subnet671AE8E5:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.192.0/18
+      VpcId:
+        Ref: DaskVPC2EFDA1EC
+      AvailabilityZone:
+        Fn::Select:
+          - 1
+          - Fn::GetAZs: ""
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC/PrivateSubnet2
+        - Key: aws-cdk:subnet-name
+          Value: Private
+        - Key: aws-cdk:subnet-type
+          Value: Private
+  DaskVPCPrivateSubnet2RouteTableCE42E133:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: DaskVPC2EFDA1EC
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC/PrivateSubnet2
+  DaskVPCPrivateSubnet2RouteTableAssociation39C9CF69:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId:
+        Ref: DaskVPCPrivateSubnet2RouteTableCE42E133
+      SubnetId:
+        Ref: DaskVPCPrivateSubnet2Subnet671AE8E5
+  DaskVPCPrivateSubnet2DefaultRoute3DB4820A:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: DaskVPCPrivateSubnet2RouteTableCE42E133
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId:
+        Ref: DaskVPCPublicSubnet2NATGateway24794936
+  DaskVPCIGWF1821BC8:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: aws-stack/DaskVPC
+  DaskVPCVPCGWA7798F51:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: DaskVPC2EFDA1EC
+      InternetGatewayId:
+        Ref: DaskVPCIGWF1821BC8
+  sgdaskSecurityGrp:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security Group for Dask
+      VpcId:
+        Ref: DaskVPC2EFDA1EC
+  daskSecurityIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: tcp
+      Description: Allow all resources w/ this security group to talk
+      FromPort: 0
+      GroupId:
+        Ref: sgdaskSecurityGrp
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - sgdaskSecurityGrp
+          - GroupId
+      ToPort: 65535
+    DependsOn:
+      - sgdaskSecurityGrp
+  daskSecurityIngressWeb:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: tcp
+      Description: Allow ingress to Jupyter and Bokeh
+      FromPort: 8786
+      GroupId:
+        Ref: sgdaskSecurityGrp
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - sgdaskSecurityGrp
+          - GroupId
+      ToPort: 8888
+    DependsOn:
+      - sgdaskSecurityGrp
+  daskSecurityEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId:
+        Ref: sgdaskSecurityGrp
+      IpProtocol: tcp
+      Description: Allow all egress
+      DestinationSecurityGroupId:
+        Fn::GetAtt:
+          - sgdaskSecurityGrp
+          - GroupId
+      FromPort: 0
+      ToPort: 65535
+    DependsOn:
+      - sgdaskSecurityGrp
+  DaskCluster3EF020CE:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: DaskCluster
+  DaskClusterDefaultServiceDiscoveryNamespace30C3BAD1:
+    Type: AWS::ServiceDiscovery::PrivateDnsNamespace
+    Properties:
+      Name: local
+      Vpc:
+        Ref: DaskVPC2EFDA1EC
+  workerTaskDefinitionTaskRole981541F1:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: "2012-10-17"
+  workerTaskDefinition312F102F:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Command:
+            - dask-worker
+            - tcp://scheduler.local:8786
+            - --nanny
+            - --worker-port
+            - "5555"
+          Cpu: 1024
+          Essential: true
+          Image: docker.io/milesg/tda-daskworker:latest
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group:
+                Ref: workerTaskDefinitionworkerContainerLogGroup30810249
+              awslogs-stream-prefix: worker-
+              awslogs-region:
+                Ref: AWS::Region
+          Memory: 2048
+          Name: workerContainer
+          PortMappings:
+            - ContainerPort: 8786
+              HostPort: 8786
+              Protocol: tcp
+            - ContainerPort: 8787
+              HostPort: 8787
+              Protocol: tcp
+            - ContainerPort: 9000
+              HostPort: 9000
+              Protocol: tcp
+            - ContainerPort: 5555
+              HostPort: 5555
+              Protocol: tcp
+      Cpu: "1024"
+      ExecutionRoleArn:
+        Fn::GetAtt:
+          - workerTaskDefinitionExecutionRoleB4F8EEAB
+          - Arn
+      Family: awsstackworkerTaskDefinition4C718765
+      Memory: "2048"
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn:
+        Fn::GetAtt:
+          - workerTaskDefinitionTaskRole981541F1
+          - Arn
+  workerTaskDefinitionworkerContainerLogGroup30810249:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 1
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+  workerTaskDefinitionExecutionRoleB4F8EEAB:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: "2012-10-17"
+  workerTaskDefinitionExecutionRoleDefaultPolicy0BF4D3DE:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - workerTaskDefinitionworkerContainerLogGroup30810249
+                - Arn
+        Version: "2012-10-17"
+      PolicyName: workerTaskDefinitionExecutionRoleDefaultPolicy0BF4D3DE
+      Roles:
+        - Ref: workerTaskDefinitionExecutionRoleB4F8EEAB
+  workerService7AAAC38C:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition:
+        Ref: workerTaskDefinition312F102F
+      Cluster:
+        Ref: DaskCluster3EF020CE
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+      DesiredCount: 2
+      EnableECSManagedTags: false
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups: []
+          Subnets:
+            - Ref: DaskVPCPrivateSubnet1Subnet428E411A
+            - Ref: DaskVPCPrivateSubnet2Subnet671AE8E5
+      ServiceName: worker
+      ServiceRegistries:
+        - RegistryArn:
+            Fn::GetAtt:
+              - workerCloudmapServiceE2D9EC68
+              - Arn
+  workerCloudmapServiceE2D9EC68:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      DnsConfig:
+        DnsRecords:
+          - TTL: 60
+            Type: A
+        NamespaceId:
+          Fn::GetAtt:
+            - DaskClusterDefaultServiceDiscoveryNamespace30C3BAD1
+            - Id
+        RoutingPolicy: MULTIVALUE
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+      Name: worker
+      NamespaceId:
+        Fn::GetAtt:
+          - DaskClusterDefaultServiceDiscoveryNamespace30C3BAD1
+          - Id
+  schedulerTaskDefinitionTaskRoleBB547007:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: "2012-10-17"
+  schedulerTaskDefinition397ACB72:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Command:
+            - dask-scheduler
+          Cpu: 1024
+          Essential: true
+          Image: docker.io/milesg/tda-daskworker:latest
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group:
+                Ref: schedulerTaskDefinitionschedulerContainerLogGroupDE13D2D6
+              awslogs-stream-prefix: scheduler-
+              awslogs-region:
+                Ref: AWS::Region
+          Memory: 2048
+          Name: schedulerContainer
+          PortMappings:
+            - ContainerPort: 8787
+              HostPort: 8787
+              Protocol: tcp
+            - ContainerPort: 8786
+              HostPort: 8786
+              Protocol: tcp
+            - ContainerPort: 9000
+              HostPort: 9000
+              Protocol: tcp
+      Cpu: "1024"
+      ExecutionRoleArn:
+        Fn::GetAtt:
+          - schedulerTaskDefinitionExecutionRole611B61B3
+          - Arn
+      Family: awsstackschedulerTaskDefinition102E53C7
+      Memory: "2048"
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn:
+        Fn::GetAtt:
+          - schedulerTaskDefinitionTaskRoleBB547007
+          - Arn
+  schedulerTaskDefinitionschedulerContainerLogGroupDE13D2D6:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      RetentionInDays: 1
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+  schedulerTaskDefinitionExecutionRole611B61B3:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: "2012-10-17"
+  schedulerTaskDefinitionExecutionRoleDefaultPolicyD9A1837E:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Effect: Allow
+            Resource:
+              Fn::GetAtt:
+                - schedulerTaskDefinitionschedulerContainerLogGroupDE13D2D6
+                - Arn
+        Version: "2012-10-17"
+      PolicyName: schedulerTaskDefinitionExecutionRoleDefaultPolicyD9A1837E
+      Roles:
+        - Ref: schedulerTaskDefinitionExecutionRole611B61B3
+  schedulerServiceF6E89BAD:
+    Type: AWS::ECS::Service
+    Properties:
+      TaskDefinition:
+        Ref: schedulerTaskDefinition397ACB72
+      Cluster:
+        Ref: DaskCluster3EF020CE
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+      DesiredCount: 1
+      EnableECSManagedTags: false
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: DISABLED
+          SecurityGroups: []
+          Subnets:
+            - Ref: DaskVPCPrivateSubnet1Subnet428E411A
+            - Ref: DaskVPCPrivateSubnet2Subnet671AE8E5
+      ServiceName: scheduler
+      ServiceRegistries:
+        - RegistryArn:
+            Fn::GetAtt:
+              - schedulerCloudmapServiceA67D4428
+              - Arn
+  schedulerCloudmapServiceA67D4428:
+    Type: AWS::ServiceDiscovery::Service
+    Properties:
+      DnsConfig:
+        DnsRecords:
+          - TTL: 60
+            Type: A
+        NamespaceId:
+          Fn::GetAtt:
+            - DaskClusterDefaultServiceDiscoveryNamespace30C3BAD1
+            - Id
+        RoutingPolicy: MULTIVALUE
+      HealthCheckCustomConfig:
+        FailureThreshold: 1
+      Name: scheduler
+      NamespaceId:
+        Fn::GetAtt:
+          - DaskClusterDefaultServiceDiscoveryNamespace30C3BAD1
+          - Id
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Modules: aws-cdk=1.12.0,@aws-cdk/assets=1.12.0,@aws-cdk/aws-apigateway=1.12.0,@aws-cdk/aws-applicationautoscaling=1.12.0,@aws-cdk/aws-autoscaling=1.12.0,@aws-cdk/aws-autoscaling-common=1.12.0,@aws-cdk/aws-autoscaling-hooktargets=1.12.0,@aws-cdk/aws-certificatemanager=1.12.0,@aws-cdk/aws-cloudformation=1.12.0,@aws-cdk/aws-cloudfront=1.12.0,@aws-cdk/aws-cloudwatch=1.12.0,@aws-cdk/aws-codebuild=1.12.0,@aws-cdk/aws-codecommit=1.12.0,@aws-cdk/aws-codepipeline=1.12.0,@aws-cdk/aws-ec2=1.12.0,@aws-cdk/aws-ecr=1.12.0,@aws-cdk/aws-ecr-assets=1.12.0,@aws-cdk/aws-ecs=1.12.0,@aws-cdk/aws-ecs-patterns=1.12.0,@aws-cdk/aws-elasticloadbalancing=1.12.0,@aws-cdk/aws-elasticloadbalancingv2=1.12.0,@aws-cdk/aws-events=1.12.0,@aws-cdk/aws-events-targets=1.12.0,@aws-cdk/aws-iam=1.12.0,@aws-cdk/aws-kms=1.12.0,@aws-cdk/aws-lambda=1.12.0,@aws-cdk/aws-logs=1.12.0,@aws-cdk/aws-route53=1.12.0,@aws-cdk/aws-route53-targets=1.12.0,@aws-cdk/aws-s3=1.12.0,@aws-cdk/aws-s3-assets=1.12.0,@aws-cdk/aws-secretsmanager=1.12.0,@aws-cdk/aws-servicediscovery=1.12.0,@aws-cdk/aws-sns=1.12.0,@aws-cdk/aws-sns-subscriptions=1.12.0,@aws-cdk/aws-sqs=1.12.0,@aws-cdk/aws-ssm=1.12.0,@aws-cdk/aws-stepfunctions=1.12.0,@aws-cdk/core=1.12.0,@aws-cdk/cx-api=1.12.0,@aws-cdk/region-info=1.12.0,jsii-runtime=Python/3.7.2
+    Condition: CDKMetadataAvailable
+Conditions:
+  CDKMetadataAvailable:
+    Fn::Or:
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-northeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ap-southeast-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - ca-central-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - cn-northwest-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-central-1
+      - Fn::Or:
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-north-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - eu-west-3
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - me-south-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - sa-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-east-2
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-1
+          - Fn::Equals:
+              - Ref: AWS::Region
+              - us-west-2
+
