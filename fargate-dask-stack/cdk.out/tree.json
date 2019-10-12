@@ -151,22 +151,6 @@
             ]
           },
           {
-            "id": "sg-daskSecurityGrp",
-            "path": "aws-stack/sg-daskSecurityGrp"
-          },
-          {
-            "id": "daskSecurityIngress",
-            "path": "aws-stack/daskSecurityIngress"
-          },
-          {
-            "id": "daskSecurityIngressWeb",
-            "path": "aws-stack/daskSecurityIngressWeb"
-          },
-          {
-            "id": "daskSecurityEgress",
-            "path": "aws-stack/daskSecurityEgress"
-          },
-          {
             "id": "DaskCluster",
             "path": "aws-stack/DaskCluster",
             "children": [
@@ -181,6 +165,40 @@
                   {
                     "id": "Resource",
                     "path": "aws-stack/DaskCluster/DefaultServiceDiscoveryNamespace/Resource"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "jupyterLoadBalancer",
+            "path": "aws-stack/jupyterLoadBalancer",
+            "children": [
+              {
+                "id": "Resource",
+                "path": "aws-stack/jupyterLoadBalancer/Resource"
+              },
+              {
+                "id": "SecurityGroup",
+                "path": "aws-stack/jupyterLoadBalancer/SecurityGroup",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/jupyterLoadBalancer/SecurityGroup/Resource"
+                  },
+                  {
+                    "id": "to awsstackjupyterSecurityGroup7315B6F7:8888",
+                    "path": "aws-stack/jupyterLoadBalancer/SecurityGroup/to awsstackjupyterSecurityGroup7315B6F7:8888"
+                  }
+                ]
+              },
+              {
+                "id": "PublicListener",
+                "path": "aws-stack/jupyterLoadBalancer/PublicListener",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/jupyterLoadBalancer/PublicListener/Resource"
                   }
                 ]
               }
@@ -249,6 +267,20 @@
               {
                 "id": "Service",
                 "path": "aws-stack/worker/Service"
+              },
+              {
+                "id": "SecurityGroup",
+                "path": "aws-stack/worker/SecurityGroup",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/worker/SecurityGroup/Resource"
+                  },
+                  {
+                    "id": "from awsstackschedulerSecurityGroup63FE0AE4:ALL PORTS",
+                    "path": "aws-stack/worker/SecurityGroup/from awsstackschedulerSecurityGroup63FE0AE4:ALL PORTS"
+                  }
+                ]
               },
               {
                 "id": "CloudmapService",
@@ -327,6 +359,24 @@
                 "path": "aws-stack/scheduler/Service"
               },
               {
+                "id": "SecurityGroup",
+                "path": "aws-stack/scheduler/SecurityGroup",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/scheduler/SecurityGroup/Resource"
+                  },
+                  {
+                    "id": "from awsstackworkerSecurityGroupC4DE48ED:ALL PORTS",
+                    "path": "aws-stack/scheduler/SecurityGroup/from awsstackworkerSecurityGroupC4DE48ED:ALL PORTS"
+                  },
+                  {
+                    "id": "from awsstackjupyterSecurityGroup7315B6F7:8786",
+                    "path": "aws-stack/scheduler/SecurityGroup/from awsstackjupyterSecurityGroup7315B6F7:8786"
+                  }
+                ]
+              },
+              {
                 "id": "CloudmapService",
                 "path": "aws-stack/scheduler/CloudmapService",
                 "children": [
@@ -335,6 +385,106 @@
                     "path": "aws-stack/scheduler/CloudmapService/Resource"
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "id": "jupyterTaskDefinition",
+            "path": "aws-stack/jupyterTaskDefinition",
+            "children": [
+              {
+                "id": "TaskRole",
+                "path": "aws-stack/jupyterTaskDefinition/TaskRole",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/jupyterTaskDefinition/TaskRole/Resource"
+                  }
+                ]
+              },
+              {
+                "id": "Resource",
+                "path": "aws-stack/jupyterTaskDefinition/Resource"
+              },
+              {
+                "id": "jupyterContainer",
+                "path": "aws-stack/jupyterTaskDefinition/jupyterContainer",
+                "children": [
+                  {
+                    "id": "LogGroup",
+                    "path": "aws-stack/jupyterTaskDefinition/jupyterContainer/LogGroup",
+                    "children": [
+                      {
+                        "id": "Resource",
+                        "path": "aws-stack/jupyterTaskDefinition/jupyterContainer/LogGroup/Resource"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "id": "ExecutionRole",
+                "path": "aws-stack/jupyterTaskDefinition/ExecutionRole",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/jupyterTaskDefinition/ExecutionRole/Resource"
+                  },
+                  {
+                    "id": "DefaultPolicy",
+                    "path": "aws-stack/jupyterTaskDefinition/ExecutionRole/DefaultPolicy",
+                    "children": [
+                      {
+                        "id": "Resource",
+                        "path": "aws-stack/jupyterTaskDefinition/ExecutionRole/DefaultPolicy/Resource"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "jupyter",
+            "path": "aws-stack/jupyter",
+            "children": [
+              {
+                "id": "Service",
+                "path": "aws-stack/jupyter/Service"
+              },
+              {
+                "id": "SecurityGroup",
+                "path": "aws-stack/jupyter/SecurityGroup",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/jupyter/SecurityGroup/Resource"
+                  },
+                  {
+                    "id": "from awsstackjupyterLoadBalancerSecurityGroupFBFB97F6:8888",
+                    "path": "aws-stack/jupyter/SecurityGroup/from awsstackjupyterLoadBalancerSecurityGroupFBFB97F6:8888"
+                  }
+                ]
+              },
+              {
+                "id": "CloudmapService",
+                "path": "aws-stack/jupyter/CloudmapService",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/jupyter/CloudmapService/Resource"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "appTargetGroup",
+            "path": "aws-stack/appTargetGroup",
+            "children": [
+              {
+                "id": "Resource",
+                "path": "aws-stack/appTargetGroup/Resource"
               }
             ]
           }
