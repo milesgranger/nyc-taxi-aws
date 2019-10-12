@@ -187,18 +187,32 @@
                     "path": "aws-stack/jupyterLoadBalancer/SecurityGroup/Resource"
                   },
                   {
+                    "id": "to awsstackschedulerSecurityGroup63FE0AE4:8787",
+                    "path": "aws-stack/jupyterLoadBalancer/SecurityGroup/to awsstackschedulerSecurityGroup63FE0AE4:8787"
+                  },
+                  {
                     "id": "to awsstackjupyterSecurityGroup7315B6F7:8888",
                     "path": "aws-stack/jupyterLoadBalancer/SecurityGroup/to awsstackjupyterSecurityGroup7315B6F7:8888"
                   }
                 ]
               },
               {
-                "id": "PublicListener",
-                "path": "aws-stack/jupyterLoadBalancer/PublicListener",
+                "id": "schedulerPublicListener",
+                "path": "aws-stack/jupyterLoadBalancer/schedulerPublicListener",
                 "children": [
                   {
                     "id": "Resource",
-                    "path": "aws-stack/jupyterLoadBalancer/PublicListener/Resource"
+                    "path": "aws-stack/jupyterLoadBalancer/schedulerPublicListener/Resource"
+                  }
+                ]
+              },
+              {
+                "id": "jupyterPublicListener",
+                "path": "aws-stack/jupyterLoadBalancer/jupyterPublicListener",
+                "children": [
+                  {
+                    "id": "Resource",
+                    "path": "aws-stack/jupyterLoadBalancer/jupyterPublicListener/Resource"
                   }
                 ]
               }
@@ -291,6 +305,46 @@
                     "path": "aws-stack/worker/CloudmapService/Resource"
                   }
                 ]
+              },
+              {
+                "id": "ScalingRole",
+                "path": "aws-stack/worker/ScalingRole"
+              },
+              {
+                "id": "TaskCount",
+                "path": "aws-stack/worker/TaskCount",
+                "children": [
+                  {
+                    "id": "Target",
+                    "path": "aws-stack/worker/TaskCount/Target",
+                    "children": [
+                      {
+                        "id": "Resource",
+                        "path": "aws-stack/worker/TaskCount/Target/Resource"
+                      },
+                      {
+                        "id": "workerCpuScaling",
+                        "path": "aws-stack/worker/TaskCount/Target/workerCpuScaling",
+                        "children": [
+                          {
+                            "id": "Resource",
+                            "path": "aws-stack/worker/TaskCount/Target/workerCpuScaling/Resource"
+                          }
+                        ]
+                      },
+                      {
+                        "id": "workerMemoryScaling",
+                        "path": "aws-stack/worker/TaskCount/Target/workerMemoryScaling",
+                        "children": [
+                          {
+                            "id": "Resource",
+                            "path": "aws-stack/worker/TaskCount/Target/workerMemoryScaling/Resource"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
               }
             ]
           },
@@ -367,6 +421,10 @@
                     "path": "aws-stack/scheduler/SecurityGroup/Resource"
                   },
                   {
+                    "id": "from awsstackjupyterLoadBalancerSecurityGroupFBFB97F6:8787",
+                    "path": "aws-stack/scheduler/SecurityGroup/from awsstackjupyterLoadBalancerSecurityGroupFBFB97F6:8787"
+                  },
+                  {
                     "id": "from awsstackworkerSecurityGroupC4DE48ED:ALL PORTS",
                     "path": "aws-stack/scheduler/SecurityGroup/from awsstackworkerSecurityGroupC4DE48ED:ALL PORTS"
                   },
@@ -385,6 +443,16 @@
                     "path": "aws-stack/scheduler/CloudmapService/Resource"
                   }
                 ]
+              }
+            ]
+          },
+          {
+            "id": "schedulerTargetGroup",
+            "path": "aws-stack/schedulerTargetGroup",
+            "children": [
+              {
+                "id": "Resource",
+                "path": "aws-stack/schedulerTargetGroup/Resource"
               }
             ]
           },
@@ -479,12 +547,12 @@
             ]
           },
           {
-            "id": "appTargetGroup",
-            "path": "aws-stack/appTargetGroup",
+            "id": "jupyterTargetGroup",
+            "path": "aws-stack/jupyterTargetGroup",
             "children": [
               {
                 "id": "Resource",
-                "path": "aws-stack/appTargetGroup/Resource"
+                "path": "aws-stack/jupyterTargetGroup/Resource"
               }
             ]
           }

@@ -253,12 +253,32 @@ Resources:
       GroupDescription: Automatically created Security Group for ELB awsstackjupyterLoadBalancerFCC2812C
       SecurityGroupIngress:
         - CidrIp: 0.0.0.0/0
+          Description: Allow from anyone on port 8787
+          FromPort: 8787
+          IpProtocol: tcp
+          ToPort: 8787
+        - CidrIp: 0.0.0.0/0
           Description: Allow from anyone on port 80
           FromPort: 80
           IpProtocol: tcp
           ToPort: 80
       VpcId:
         Ref: DaskVPC2EFDA1EC
+  jupyterLoadBalancerSecurityGrouptoawsstackschedulerSecurityGroup63FE0AE48787D39FF98B:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId:
+        Fn::GetAtt:
+          - jupyterLoadBalancerSecurityGroupEC92C62E
+          - GroupId
+      IpProtocol: tcp
+      Description: Load balancer to target
+      DestinationSecurityGroupId:
+        Fn::GetAtt:
+          - schedulerSecurityGroup410E7B61
+          - GroupId
+      FromPort: 8787
+      ToPort: 8787
   jupyterLoadBalancerSecurityGrouptoawsstackjupyterSecurityGroup7315B6F78888208A65BB:
     Type: AWS::EC2::SecurityGroupEgress
     Properties:
@@ -274,12 +294,23 @@ Resources:
           - GroupId
       FromPort: 8888
       ToPort: 8888
-  jupyterLoadBalancerPublicListener702593B5:
+  jupyterLoadBalancerschedulerPublicListener643C3947:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
         - TargetGroupArn:
-            Ref: appTargetGroup4F183CB0
+            Ref: schedulerTargetGroup255A1E73
+          Type: forward
+      LoadBalancerArn:
+        Ref: jupyterLoadBalancer2EB24C90
+      Port: 8787
+      Protocol: HTTP
+  jupyterLoadBalancerjupyterPublicListenerA7DC1ECF:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn:
+            Ref: jupyterTargetGroupBE781992
           Type: forward
       LoadBalancerArn:
         Ref: jupyterLoadBalancer2EB24C90
@@ -303,9 +334,11 @@ Resources:
             - dask-worker
             - tcp://scheduler.local:8786
             - --nanny
+            - --memory-limit
+            - 16G
             - --worker-port
             - "5555"
-          Cpu: 1024
+          Cpu: 4096
           Essential: true
           Image: docker.io/milesg/tda-daskworker:latest
           LogConfiguration:
@@ -316,7 +349,7 @@ Resources:
               awslogs-stream-prefix: worker-
               awslogs-region:
                 Ref: AWS::Region
-          Memory: 2048
+          Memory: 16384
           Name: workerContainer
           PortMappings:
             - ContainerPort: 8786
@@ -331,13 +364,13 @@ Resources:
             - ContainerPort: 5555
               HostPort: 5555
               Protocol: tcp
-      Cpu: "1024"
+      Cpu: "4096"
       ExecutionRoleArn:
         Fn::GetAtt:
           - workerTaskDefinitionExecutionRoleB4F8EEAB
           - Arn
       Family: awsstackworkerTaskDefinition4C718765
-      Memory: "2048"
+      Memory: "16384"
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -451,6 +484,56 @@ Resources:
         Fn::GetAtt:
           - DaskClusterDefaultServiceDiscoveryNamespace30C3BAD1
           - Id
+  workerTaskCountTarget20E66C40:
+    Type: AWS::ApplicationAutoScaling::ScalableTarget
+    Properties:
+      MaxCapacity: 18
+      MinCapacity: 8
+      ResourceId:
+        Fn::Join:
+          - ""
+          - - service/
+            - Ref: DaskCluster3EF020CE
+            - /
+            - Fn::GetAtt:
+                - workerService7AAAC38C
+                - Name
+      RoleARN:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":iam::"
+            - Ref: AWS::AccountId
+            - :role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService
+      ScalableDimension: ecs:service:DesiredCount
+      ServiceNamespace: ecs
+  workerTaskCountTargetworkerCpuScaling8C2D0921:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: awsstackworkerTaskCountTargetworkerCpuScaling5458F1DC
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId:
+        Ref: workerTaskCountTarget20E66C40
+      TargetTrackingScalingPolicyConfiguration:
+        DisableScaleIn: true
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageCPUUtilization
+        ScaleOutCooldown: 15
+        TargetValue: 25
+  workerTaskCountTargetworkerMemoryScaling8B796C9F:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: awsstackworkerTaskCountTargetworkerMemoryScaling26B9770F
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId:
+        Ref: workerTaskCountTarget20E66C40
+      TargetTrackingScalingPolicyConfiguration:
+        DisableScaleIn: true
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageMemoryUtilization
+        ScaleOutCooldown: 15
+        TargetValue: 25
   schedulerTaskDefinitionTaskRoleBB547007:
     Type: AWS::IAM::Role
     Properties:
@@ -549,7 +632,13 @@ Resources:
         MinimumHealthyPercent: 50
       DesiredCount: 1
       EnableECSManagedTags: false
+      HealthCheckGracePeriodSeconds: 60
       LaunchType: FARGATE
+      LoadBalancers:
+        - ContainerName: schedulerContainer
+          ContainerPort: 8787
+          TargetGroupArn:
+            Ref: schedulerTargetGroup255A1E73
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: DISABLED
@@ -566,6 +655,8 @@ Resources:
             Fn::GetAtt:
               - schedulerCloudmapServiceA67D4428
               - Arn
+    DependsOn:
+      - jupyterLoadBalancerschedulerPublicListener643C3947
   schedulerSecurityGroup410E7B61:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -576,6 +667,21 @@ Resources:
           IpProtocol: "-1"
       VpcId:
         Ref: DaskVPC2EFDA1EC
+  schedulerSecurityGroupfromawsstackjupyterLoadBalancerSecurityGroupFBFB97F6878710637C81:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: tcp
+      Description: Load balancer to target
+      FromPort: 8787
+      GroupId:
+        Fn::GetAtt:
+          - schedulerSecurityGroup410E7B61
+          - GroupId
+      SourceSecurityGroupId:
+        Fn::GetAtt:
+          - jupyterLoadBalancerSecurityGroupEC92C62E
+          - GroupId
+      ToPort: 8787
   schedulerSecurityGroupfromawsstackworkerSecurityGroupC4DE48EDALLPORTS12D91105:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
@@ -625,6 +731,20 @@ Resources:
         Fn::GetAtt:
           - DaskClusterDefaultServiceDiscoveryNamespace30C3BAD1
           - Id
+  schedulerTargetGroup255A1E73:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 60
+      HealthCheckPath: /status
+      HealthCheckPort: "8787"
+      HealthCheckTimeoutSeconds: 40
+      Matcher:
+        HttpCode: 200-399
+      Port: 8787
+      Protocol: HTTP
+      TargetType: ip
+      VpcId:
+        Ref: DaskVPC2EFDA1EC
   jupyterTaskDefinitionTaskRole310DE3DB:
     Type: AWS::IAM::Role
     Properties:
@@ -729,7 +849,7 @@ Resources:
         - ContainerName: jupyterContainer
           ContainerPort: 8888
           TargetGroupArn:
-            Ref: appTargetGroup4F183CB0
+            Ref: jupyterTargetGroupBE781992
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
@@ -747,7 +867,7 @@ Resources:
               - jupyterCloudmapService825F7C18
               - Arn
     DependsOn:
-      - jupyterLoadBalancerPublicListener702593B5
+      - jupyterLoadBalancerjupyterPublicListenerA7DC1ECF
   jupyterSecurityGroup17EB482F:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -792,7 +912,7 @@ Resources:
         Fn::GetAtt:
           - DaskClusterDefaultServiceDiscoveryNamespace30C3BAD1
           - Id
-  appTargetGroup4F183CB0:
+  jupyterTargetGroupBE781992:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       HealthCheckIntervalSeconds: 60
@@ -809,7 +929,7 @@ Resources:
   CDKMetadata:
     Type: AWS::CDK::Metadata
     Properties:
-      Modules: aws-cdk=1.12.0,@aws-cdk/assets=1.12.0,@aws-cdk/aws-apigateway=1.12.0,@aws-cdk/aws-applicationautoscaling=1.12.0,@aws-cdk/aws-autoscaling=1.12.0,@aws-cdk/aws-autoscaling-common=1.12.0,@aws-cdk/aws-autoscaling-hooktargets=1.12.0,@aws-cdk/aws-certificatemanager=1.12.0,@aws-cdk/aws-cloudformation=1.12.0,@aws-cdk/aws-cloudfront=1.12.0,@aws-cdk/aws-cloudwatch=1.12.0,@aws-cdk/aws-codebuild=1.12.0,@aws-cdk/aws-codecommit=1.12.0,@aws-cdk/aws-codepipeline=1.12.0,@aws-cdk/aws-ec2=1.12.0,@aws-cdk/aws-ecr=1.12.0,@aws-cdk/aws-ecr-assets=1.12.0,@aws-cdk/aws-ecs=1.12.0,@aws-cdk/aws-ecs-patterns=1.12.0,@aws-cdk/aws-elasticloadbalancing=1.12.0,@aws-cdk/aws-elasticloadbalancingv2=1.12.0,@aws-cdk/aws-events=1.12.0,@aws-cdk/aws-events-targets=1.12.0,@aws-cdk/aws-iam=1.12.0,@aws-cdk/aws-kms=1.12.0,@aws-cdk/aws-lambda=1.12.0,@aws-cdk/aws-logs=1.12.0,@aws-cdk/aws-route53=1.12.0,@aws-cdk/aws-route53-targets=1.12.0,@aws-cdk/aws-s3=1.12.0,@aws-cdk/aws-s3-assets=1.12.0,@aws-cdk/aws-secretsmanager=1.12.0,@aws-cdk/aws-servicediscovery=1.12.0,@aws-cdk/aws-sns=1.12.0,@aws-cdk/aws-sns-subscriptions=1.12.0,@aws-cdk/aws-sqs=1.12.0,@aws-cdk/aws-ssm=1.12.0,@aws-cdk/aws-stepfunctions=1.12.0,@aws-cdk/core=1.12.0,@aws-cdk/cx-api=1.12.0,@aws-cdk/region-info=1.12.0,jsii-runtime=Python/3.7.2
+      Modules: aws-cdk=1.12.0,@aws-cdk/assets=1.12.0,@aws-cdk/aws-apigateway=1.12.0,@aws-cdk/aws-applicationautoscaling=1.12.0,@aws-cdk/aws-autoscaling=1.12.0,@aws-cdk/aws-autoscaling-common=1.12.0,@aws-cdk/aws-autoscaling-hooktargets=1.12.0,@aws-cdk/aws-certificatemanager=1.12.0,@aws-cdk/aws-cloudformation=1.12.0,@aws-cdk/aws-cloudfront=1.12.0,@aws-cdk/aws-cloudwatch=1.12.0,@aws-cdk/aws-ec2=1.12.0,@aws-cdk/aws-ecr=1.12.0,@aws-cdk/aws-ecr-assets=1.12.0,@aws-cdk/aws-ecs=1.12.0,@aws-cdk/aws-elasticloadbalancing=1.12.0,@aws-cdk/aws-elasticloadbalancingv2=1.12.0,@aws-cdk/aws-events=1.12.0,@aws-cdk/aws-iam=1.12.0,@aws-cdk/aws-kms=1.12.0,@aws-cdk/aws-lambda=1.12.0,@aws-cdk/aws-logs=1.12.0,@aws-cdk/aws-route53=1.12.0,@aws-cdk/aws-route53-targets=1.12.0,@aws-cdk/aws-s3=1.12.0,@aws-cdk/aws-s3-assets=1.12.0,@aws-cdk/aws-secretsmanager=1.12.0,@aws-cdk/aws-servicediscovery=1.12.0,@aws-cdk/aws-sns=1.12.0,@aws-cdk/aws-sns-subscriptions=1.12.0,@aws-cdk/aws-sqs=1.12.0,@aws-cdk/aws-ssm=1.12.0,@aws-cdk/core=1.12.0,@aws-cdk/cx-api=1.12.0,@aws-cdk/region-info=1.12.0,jsii-runtime=Python/3.7.2
     Condition: CDKMetadataAvailable
 Conditions:
   CDKMetadataAvailable:

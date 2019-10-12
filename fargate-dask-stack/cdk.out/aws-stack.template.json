@@ -13,6 +13,9 @@
             "Value": "aws-stack/DaskVPC"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/Resource"
       }
     },
     "DaskVPCPublicSubnet1SubnetBAEBDFDE": {
@@ -45,6 +48,9 @@
             "Value": "Public"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet1/Subnet"
       }
     },
     "DaskVPCPublicSubnet1RouteTableC3FD7C22": {
@@ -59,6 +65,9 @@
             "Value": "aws-stack/DaskVPC/PublicSubnet1"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet1/RouteTable"
       }
     },
     "DaskVPCPublicSubnet1RouteTableAssociation8746EB6C": {
@@ -70,6 +79,9 @@
         "SubnetId": {
           "Ref": "DaskVPCPublicSubnet1SubnetBAEBDFDE"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet1/RouteTableAssociation"
       }
     },
     "DaskVPCPublicSubnet1DefaultRoute19C90886": {
@@ -85,12 +97,18 @@
       },
       "DependsOn": [
         "DaskVPCVPCGWA7798F51"
-      ]
+      ],
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet1/DefaultRoute"
+      }
     },
     "DaskVPCPublicSubnet1EIP9DB75489": {
       "Type": "AWS::EC2::EIP",
       "Properties": {
         "Domain": "vpc"
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet1/EIP"
       }
     },
     "DaskVPCPublicSubnet1NATGateway471934E4": {
@@ -111,6 +129,9 @@
             "Value": "aws-stack/DaskVPC/PublicSubnet1"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet1/NATGateway"
       }
     },
     "DaskVPCPublicSubnet2SubnetDCC064E3": {
@@ -143,6 +164,9 @@
             "Value": "Public"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet2/Subnet"
       }
     },
     "DaskVPCPublicSubnet2RouteTable894C9C23": {
@@ -157,6 +181,9 @@
             "Value": "aws-stack/DaskVPC/PublicSubnet2"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet2/RouteTable"
       }
     },
     "DaskVPCPublicSubnet2RouteTableAssociationA81199D0": {
@@ -168,6 +195,9 @@
         "SubnetId": {
           "Ref": "DaskVPCPublicSubnet2SubnetDCC064E3"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet2/RouteTableAssociation"
       }
     },
     "DaskVPCPublicSubnet2DefaultRoute8028BFB3": {
@@ -183,12 +213,18 @@
       },
       "DependsOn": [
         "DaskVPCVPCGWA7798F51"
-      ]
+      ],
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet2/DefaultRoute"
+      }
     },
     "DaskVPCPublicSubnet2EIP7C98DF0D": {
       "Type": "AWS::EC2::EIP",
       "Properties": {
         "Domain": "vpc"
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet2/EIP"
       }
     },
     "DaskVPCPublicSubnet2NATGateway24794936": {
@@ -209,6 +245,9 @@
             "Value": "aws-stack/DaskVPC/PublicSubnet2"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PublicSubnet2/NATGateway"
       }
     },
     "DaskVPCPrivateSubnet1Subnet428E411A": {
@@ -241,6 +280,9 @@
             "Value": "Private"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PrivateSubnet1/Subnet"
       }
     },
     "DaskVPCPrivateSubnet1RouteTable597A5E35": {
@@ -255,6 +297,9 @@
             "Value": "aws-stack/DaskVPC/PrivateSubnet1"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PrivateSubnet1/RouteTable"
       }
     },
     "DaskVPCPrivateSubnet1RouteTableAssociation576CCEDB": {
@@ -266,6 +311,9 @@
         "SubnetId": {
           "Ref": "DaskVPCPrivateSubnet1Subnet428E411A"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PrivateSubnet1/RouteTableAssociation"
       }
     },
     "DaskVPCPrivateSubnet1DefaultRouteD6098CBE": {
@@ -278,6 +326,9 @@
         "NatGatewayId": {
           "Ref": "DaskVPCPublicSubnet1NATGateway471934E4"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PrivateSubnet1/DefaultRoute"
       }
     },
     "DaskVPCPrivateSubnet2Subnet671AE8E5": {
@@ -310,6 +361,9 @@
             "Value": "Private"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PrivateSubnet2/Subnet"
       }
     },
     "DaskVPCPrivateSubnet2RouteTableCE42E133": {
@@ -324,6 +378,9 @@
             "Value": "aws-stack/DaskVPC/PrivateSubnet2"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PrivateSubnet2/RouteTable"
       }
     },
     "DaskVPCPrivateSubnet2RouteTableAssociation39C9CF69": {
@@ -335,6 +392,9 @@
         "SubnetId": {
           "Ref": "DaskVPCPrivateSubnet2Subnet671AE8E5"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PrivateSubnet2/RouteTableAssociation"
       }
     },
     "DaskVPCPrivateSubnet2DefaultRoute3DB4820A": {
@@ -347,6 +407,9 @@
         "NatGatewayId": {
           "Ref": "DaskVPCPublicSubnet2NATGateway24794936"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/PrivateSubnet2/DefaultRoute"
       }
     },
     "DaskVPCIGWF1821BC8": {
@@ -358,6 +421,9 @@
             "Value": "aws-stack/DaskVPC"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/IGW"
       }
     },
     "DaskVPCVPCGWA7798F51": {
@@ -369,12 +435,18 @@
         "InternetGatewayId": {
           "Ref": "DaskVPCIGWF1821BC8"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskVPC/VPCGW"
       }
     },
     "DaskCluster3EF020CE": {
       "Type": "AWS::ECS::Cluster",
       "Properties": {
         "ClusterName": "DaskCluster"
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskCluster/Resource"
       }
     },
     "DaskClusterDefaultServiceDiscoveryNamespace30C3BAD1": {
@@ -384,6 +456,9 @@
         "Vpc": {
           "Ref": "DaskVPC2EFDA1EC"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/DaskCluster/DefaultServiceDiscoveryNamespace/Resource"
       }
     },
     "jupyterLoadBalancer2EB24C90": {
@@ -411,13 +486,23 @@
       "DependsOn": [
         "DaskVPCPublicSubnet1DefaultRoute19C90886",
         "DaskVPCPublicSubnet2DefaultRoute8028BFB3"
-      ]
+      ],
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterLoadBalancer/Resource"
+      }
     },
     "jupyterLoadBalancerSecurityGroupEC92C62E": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
         "GroupDescription": "Automatically created Security Group for ELB awsstackjupyterLoadBalancerFCC2812C",
         "SecurityGroupIngress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow from anyone on port 8787",
+            "FromPort": 8787,
+            "IpProtocol": "tcp",
+            "ToPort": 8787
+          },
           {
             "CidrIp": "0.0.0.0/0",
             "Description": "Allow from anyone on port 80",
@@ -429,6 +514,33 @@
         "VpcId": {
           "Ref": "DaskVPC2EFDA1EC"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterLoadBalancer/SecurityGroup/Resource"
+      }
+    },
+    "jupyterLoadBalancerSecurityGrouptoawsstackschedulerSecurityGroup63FE0AE48787D39FF98B": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Fn::GetAtt": [
+            "jupyterLoadBalancerSecurityGroupEC92C62E",
+            "GroupId"
+          ]
+        },
+        "IpProtocol": "tcp",
+        "Description": "Load balancer to target",
+        "DestinationSecurityGroupId": {
+          "Fn::GetAtt": [
+            "schedulerSecurityGroup410E7B61",
+            "GroupId"
+          ]
+        },
+        "FromPort": 8787,
+        "ToPort": 8787
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterLoadBalancer/SecurityGroup/to awsstackschedulerSecurityGroup63FE0AE4:8787"
       }
     },
     "jupyterLoadBalancerSecurityGrouptoawsstackjupyterSecurityGroup7315B6F78888208A65BB": {
@@ -450,15 +562,39 @@
         },
         "FromPort": 8888,
         "ToPort": 8888
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterLoadBalancer/SecurityGroup/to awsstackjupyterSecurityGroup7315B6F7:8888"
       }
     },
-    "jupyterLoadBalancerPublicListener702593B5": {
+    "jupyterLoadBalancerschedulerPublicListener643C3947": {
       "Type": "AWS::ElasticLoadBalancingV2::Listener",
       "Properties": {
         "DefaultActions": [
           {
             "TargetGroupArn": {
-              "Ref": "appTargetGroup4F183CB0"
+              "Ref": "schedulerTargetGroup255A1E73"
+            },
+            "Type": "forward"
+          }
+        ],
+        "LoadBalancerArn": {
+          "Ref": "jupyterLoadBalancer2EB24C90"
+        },
+        "Port": 8787,
+        "Protocol": "HTTP"
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterLoadBalancer/schedulerPublicListener/Resource"
+      }
+    },
+    "jupyterLoadBalancerjupyterPublicListenerA7DC1ECF": {
+      "Type": "AWS::ElasticLoadBalancingV2::Listener",
+      "Properties": {
+        "DefaultActions": [
+          {
+            "TargetGroupArn": {
+              "Ref": "jupyterTargetGroupBE781992"
             },
             "Type": "forward"
           }
@@ -468,6 +604,9 @@
         },
         "Port": 80,
         "Protocol": "HTTP"
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterLoadBalancer/jupyterPublicListener/Resource"
       }
     },
     "workerTaskDefinitionTaskRole981541F1": {
@@ -485,6 +624,9 @@
           ],
           "Version": "2012-10-17"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/workerTaskDefinition/TaskRole/Resource"
       }
     },
     "workerTaskDefinition312F102F": {
@@ -496,10 +638,12 @@
               "dask-worker",
               "tcp://scheduler.local:8786",
               "--nanny",
+              "--memory-limit",
+              "16G",
               "--worker-port",
               "5555"
             ],
-            "Cpu": 1024,
+            "Cpu": 4096,
             "Essential": true,
             "Image": "docker.io/milesg/tda-daskworker:latest",
             "LogConfiguration": {
@@ -514,7 +658,7 @@
                 }
               }
             },
-            "Memory": 2048,
+            "Memory": 16384,
             "Name": "workerContainer",
             "PortMappings": [
               {
@@ -540,7 +684,7 @@
             ]
           }
         ],
-        "Cpu": "1024",
+        "Cpu": "4096",
         "ExecutionRoleArn": {
           "Fn::GetAtt": [
             "workerTaskDefinitionExecutionRoleB4F8EEAB",
@@ -548,7 +692,7 @@
           ]
         },
         "Family": "awsstackworkerTaskDefinition4C718765",
-        "Memory": "2048",
+        "Memory": "16384",
         "NetworkMode": "awsvpc",
         "RequiresCompatibilities": [
           "FARGATE"
@@ -559,6 +703,9 @@
             "Arn"
           ]
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/workerTaskDefinition/Resource"
       }
     },
     "workerTaskDefinitionworkerContainerLogGroup30810249": {
@@ -567,7 +714,10 @@
         "RetentionInDays": 1
       },
       "UpdateReplacePolicy": "Retain",
-      "DeletionPolicy": "Retain"
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/workerTaskDefinition/workerContainer/LogGroup/Resource"
+      }
     },
     "workerTaskDefinitionExecutionRoleB4F8EEAB": {
       "Type": "AWS::IAM::Role",
@@ -584,6 +734,9 @@
           ],
           "Version": "2012-10-17"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/workerTaskDefinition/ExecutionRole/Resource"
       }
     },
     "workerTaskDefinitionExecutionRoleDefaultPolicy0BF4D3DE": {
@@ -613,6 +766,9 @@
             "Ref": "workerTaskDefinitionExecutionRoleB4F8EEAB"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/workerTaskDefinition/ExecutionRole/DefaultPolicy/Resource"
       }
     },
     "workerService7AAAC38C": {
@@ -628,7 +784,7 @@
           "MaximumPercent": 200,
           "MinimumHealthyPercent": 50
         },
-        "DesiredCount": 2,
+        "DesiredCount": 8,
         "EnableECSManagedTags": false,
         "LaunchType": "FARGATE",
         "NetworkConfiguration": {
@@ -663,6 +819,9 @@
             }
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/worker/Service"
       }
     },
     "workerSecurityGroup49E290CB": {
@@ -679,6 +838,9 @@
         "VpcId": {
           "Ref": "DaskVPC2EFDA1EC"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/worker/SecurityGroup/Resource"
       }
     },
     "workerSecurityGroupfromawsstackschedulerSecurityGroup63FE0AE4ALLPORTS822058D8": {
@@ -700,6 +862,9 @@
           ]
         },
         "ToPort": 65535
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/worker/SecurityGroup/from awsstackschedulerSecurityGroup63FE0AE4:ALL PORTS"
       }
     },
     "workerCloudmapServiceE2D9EC68": {
@@ -730,6 +895,97 @@
             "Id"
           ]
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/worker/CloudmapService/Resource"
+      }
+    },
+    "workerTaskCountTarget20E66C40": {
+      "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+      "Properties": {
+        "MaxCapacity": 18,
+        "MinCapacity": 8,
+        "ResourceId": {
+          "Fn::Join": [
+            "",
+            [
+              "service/",
+              {
+                "Ref": "DaskCluster3EF020CE"
+              },
+              "/",
+              {
+                "Fn::GetAtt": [
+                  "workerService7AAAC38C",
+                  "Name"
+                ]
+              }
+            ]
+          ]
+        },
+        "RoleARN": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":iam::",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService"
+            ]
+          ]
+        },
+        "ScalableDimension": "ecs:service:DesiredCount",
+        "ServiceNamespace": "ecs"
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/worker/TaskCount/Target/Resource"
+      }
+    },
+    "workerTaskCountTargetworkerCpuScaling8C2D0921": {
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+      "Properties": {
+        "PolicyName": "awsstackworkerTaskCountTargetworkerCpuScaling5458F1DC",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": {
+          "Ref": "workerTaskCountTarget20E66C40"
+        },
+        "TargetTrackingScalingPolicyConfiguration": {
+          "DisableScaleIn": true,
+          "PredefinedMetricSpecification": {
+            "PredefinedMetricType": "ECSServiceAverageCPUUtilization"
+          },
+          "ScaleOutCooldown": 15,
+          "TargetValue": 25
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/worker/TaskCount/Target/workerCpuScaling/Resource"
+      }
+    },
+    "workerTaskCountTargetworkerMemoryScaling8B796C9F": {
+      "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+      "Properties": {
+        "PolicyName": "awsstackworkerTaskCountTargetworkerMemoryScaling26B9770F",
+        "PolicyType": "TargetTrackingScaling",
+        "ScalingTargetId": {
+          "Ref": "workerTaskCountTarget20E66C40"
+        },
+        "TargetTrackingScalingPolicyConfiguration": {
+          "DisableScaleIn": true,
+          "PredefinedMetricSpecification": {
+            "PredefinedMetricType": "ECSServiceAverageMemoryUtilization"
+          },
+          "ScaleOutCooldown": 15,
+          "TargetValue": 25
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/worker/TaskCount/Target/workerMemoryScaling/Resource"
       }
     },
     "schedulerTaskDefinitionTaskRoleBB547007": {
@@ -747,6 +1003,9 @@
           ],
           "Version": "2012-10-17"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/schedulerTaskDefinition/TaskRole/Resource"
       }
     },
     "schedulerTaskDefinition397ACB72": {
@@ -757,7 +1016,7 @@
             "Command": [
               "dask-scheduler"
             ],
-            "Cpu": 1024,
+            "Cpu": 2048,
             "Essential": true,
             "Image": "docker.io/milesg/tda-daskworker:latest",
             "LogConfiguration": {
@@ -772,7 +1031,7 @@
                 }
               }
             },
-            "Memory": 2048,
+            "Memory": 4096,
             "Name": "schedulerContainer",
             "PortMappings": [
               {
@@ -793,7 +1052,7 @@
             ]
           }
         ],
-        "Cpu": "1024",
+        "Cpu": "2048",
         "ExecutionRoleArn": {
           "Fn::GetAtt": [
             "schedulerTaskDefinitionExecutionRole611B61B3",
@@ -801,7 +1060,7 @@
           ]
         },
         "Family": "awsstackschedulerTaskDefinition102E53C7",
-        "Memory": "2048",
+        "Memory": "4096",
         "NetworkMode": "awsvpc",
         "RequiresCompatibilities": [
           "FARGATE"
@@ -812,6 +1071,9 @@
             "Arn"
           ]
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/schedulerTaskDefinition/Resource"
       }
     },
     "schedulerTaskDefinitionschedulerContainerLogGroupDE13D2D6": {
@@ -820,7 +1082,10 @@
         "RetentionInDays": 1
       },
       "UpdateReplacePolicy": "Retain",
-      "DeletionPolicy": "Retain"
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/schedulerTaskDefinition/schedulerContainer/LogGroup/Resource"
+      }
     },
     "schedulerTaskDefinitionExecutionRole611B61B3": {
       "Type": "AWS::IAM::Role",
@@ -837,6 +1102,9 @@
           ],
           "Version": "2012-10-17"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/schedulerTaskDefinition/ExecutionRole/Resource"
       }
     },
     "schedulerTaskDefinitionExecutionRoleDefaultPolicyD9A1837E": {
@@ -866,6 +1134,9 @@
             "Ref": "schedulerTaskDefinitionExecutionRole611B61B3"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/schedulerTaskDefinition/ExecutionRole/DefaultPolicy/Resource"
       }
     },
     "schedulerServiceF6E89BAD": {
@@ -883,7 +1154,17 @@
         },
         "DesiredCount": 1,
         "EnableECSManagedTags": false,
+        "HealthCheckGracePeriodSeconds": 60,
         "LaunchType": "FARGATE",
+        "LoadBalancers": [
+          {
+            "ContainerName": "schedulerContainer",
+            "ContainerPort": 8787,
+            "TargetGroupArn": {
+              "Ref": "schedulerTargetGroup255A1E73"
+            }
+          }
+        ],
         "NetworkConfiguration": {
           "AwsvpcConfiguration": {
             "AssignPublicIp": "DISABLED",
@@ -916,6 +1197,12 @@
             }
           }
         ]
+      },
+      "DependsOn": [
+        "jupyterLoadBalancerschedulerPublicListener643C3947"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/scheduler/Service"
       }
     },
     "schedulerSecurityGroup410E7B61": {
@@ -932,6 +1219,33 @@
         "VpcId": {
           "Ref": "DaskVPC2EFDA1EC"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/scheduler/SecurityGroup/Resource"
+      }
+    },
+    "schedulerSecurityGroupfromawsstackjupyterLoadBalancerSecurityGroupFBFB97F6878710637C81": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "IpProtocol": "tcp",
+        "Description": "Load balancer to target",
+        "FromPort": 8787,
+        "GroupId": {
+          "Fn::GetAtt": [
+            "schedulerSecurityGroup410E7B61",
+            "GroupId"
+          ]
+        },
+        "SourceSecurityGroupId": {
+          "Fn::GetAtt": [
+            "jupyterLoadBalancerSecurityGroupEC92C62E",
+            "GroupId"
+          ]
+        },
+        "ToPort": 8787
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/scheduler/SecurityGroup/from awsstackjupyterLoadBalancerSecurityGroupFBFB97F6:8787"
       }
     },
     "schedulerSecurityGroupfromawsstackworkerSecurityGroupC4DE48EDALLPORTS12D91105": {
@@ -953,6 +1267,9 @@
           ]
         },
         "ToPort": 65535
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/scheduler/SecurityGroup/from awsstackworkerSecurityGroupC4DE48ED:ALL PORTS"
       }
     },
     "schedulerSecurityGroupfromawsstackjupyterSecurityGroup7315B6F7878652EB4030": {
@@ -974,6 +1291,9 @@
           ]
         },
         "ToPort": 8786
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/scheduler/SecurityGroup/from awsstackjupyterSecurityGroup7315B6F7:8786"
       }
     },
     "schedulerCloudmapServiceA67D4428": {
@@ -1004,6 +1324,30 @@
             "Id"
           ]
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/scheduler/CloudmapService/Resource"
+      }
+    },
+    "schedulerTargetGroup255A1E73": {
+      "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+      "Properties": {
+        "HealthCheckIntervalSeconds": 60,
+        "HealthCheckPath": "/status",
+        "HealthCheckPort": "8787",
+        "HealthCheckTimeoutSeconds": 40,
+        "Matcher": {
+          "HttpCode": "200-399"
+        },
+        "Port": 8787,
+        "Protocol": "HTTP",
+        "TargetType": "ip",
+        "VpcId": {
+          "Ref": "DaskVPC2EFDA1EC"
+        }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/schedulerTargetGroup/Resource"
       }
     },
     "jupyterTaskDefinitionTaskRole310DE3DB": {
@@ -1021,6 +1365,9 @@
           ],
           "Version": "2012-10-17"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterTaskDefinition/TaskRole/Resource"
       }
     },
     "jupyterTaskDefinitionC583F407": {
@@ -1082,6 +1429,9 @@
             "Arn"
           ]
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterTaskDefinition/Resource"
       }
     },
     "jupyterTaskDefinitionjupyterContainerLogGroup17A06FE5": {
@@ -1090,7 +1440,10 @@
         "RetentionInDays": 1
       },
       "UpdateReplacePolicy": "Retain",
-      "DeletionPolicy": "Retain"
+      "DeletionPolicy": "Retain",
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterTaskDefinition/jupyterContainer/LogGroup/Resource"
+      }
     },
     "jupyterTaskDefinitionExecutionRole46A9A2AF": {
       "Type": "AWS::IAM::Role",
@@ -1107,6 +1460,9 @@
           ],
           "Version": "2012-10-17"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterTaskDefinition/ExecutionRole/Resource"
       }
     },
     "jupyterTaskDefinitionExecutionRoleDefaultPolicy09A0F650": {
@@ -1136,6 +1492,9 @@
             "Ref": "jupyterTaskDefinitionExecutionRole46A9A2AF"
           }
         ]
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterTaskDefinition/ExecutionRole/DefaultPolicy/Resource"
       }
     },
     "jupyterService6C51F316": {
@@ -1160,7 +1519,7 @@
             "ContainerName": "jupyterContainer",
             "ContainerPort": 8888,
             "TargetGroupArn": {
-              "Ref": "appTargetGroup4F183CB0"
+              "Ref": "jupyterTargetGroupBE781992"
             }
           }
         ],
@@ -1198,8 +1557,11 @@
         ]
       },
       "DependsOn": [
-        "jupyterLoadBalancerPublicListener702593B5"
-      ]
+        "jupyterLoadBalancerjupyterPublicListenerA7DC1ECF"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyter/Service"
+      }
     },
     "jupyterSecurityGroup17EB482F": {
       "Type": "AWS::EC2::SecurityGroup",
@@ -1215,6 +1577,9 @@
         "VpcId": {
           "Ref": "DaskVPC2EFDA1EC"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyter/SecurityGroup/Resource"
       }
     },
     "jupyterSecurityGroupfromawsstackjupyterLoadBalancerSecurityGroupFBFB97F6888831AD9CBF": {
@@ -1236,6 +1601,9 @@
           ]
         },
         "ToPort": 8888
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyter/SecurityGroup/from awsstackjupyterLoadBalancerSecurityGroupFBFB97F6:8888"
       }
     },
     "jupyterCloudmapService825F7C18": {
@@ -1266,9 +1634,12 @@
             "Id"
           ]
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyter/CloudmapService/Resource"
       }
     },
-    "appTargetGroup4F183CB0": {
+    "jupyterTargetGroupBE781992": {
       "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
       "Properties": {
         "HealthCheckIntervalSeconds": 60,
@@ -1284,6 +1655,9 @@
         "VpcId": {
           "Ref": "DaskVPC2EFDA1EC"
         }
+      },
+      "Metadata": {
+        "aws:cdk:path": "aws-stack/jupyterTargetGroup/Resource"
       }
     }
   }

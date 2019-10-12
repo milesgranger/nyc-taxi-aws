@@ -5,8 +5,6 @@ from aws_cdk import (
     aws_ecs as ecs,
     aws_servicediscovery as servicediscovery,
     aws_elasticloadbalancingv2 as elb,
-    aws_ecs_patterns as ecs_patterns,
-    aws_route53 as route53,
     aws_logs as logs,
     core,
 )
@@ -17,17 +15,7 @@ class DaskStack(core.Stack):
         super().__init__(scope, id, **kwargs)
 
         self.setup_networking()
-        self.cluster = ecs.Cluster(
-            self,
-            id="DaskCluster",
-            vpc=self.vpc,
-            cluster_name="DaskCluster",
-            default_cloud_map_namespace=ecs.CloudMapNamespaceOptions(
-                name="local",
-                type=servicediscovery.NamespaceType.DNS_PRIVATE,
-                vpc=self.vpc,
-            ),
-        )
+        self.setup_cluster()
         self.setup_load_balancer()
         self.create_worker_service()
         self.create_scheduler_service()
@@ -45,6 +33,19 @@ class DaskStack(core.Stack):
             enable_dns_hostnames=True,
         )
 
+    def setup_cluster(self):
+        self.cluster = ecs.Cluster(
+            self,
+            id="DaskCluster",
+            vpc=self.vpc,
+            cluster_name="DaskCluster",
+            default_cloud_map_namespace=ecs.CloudMapNamespaceOptions(
+                name="local",
+                type=servicediscovery.NamespaceType.DNS_PRIVATE,
+                vpc=self.vpc,
+            ),
+        )
+
     def setup_allowable_connections(self):
         self.scheduler_service.connections.allow_from(
             self.worker_service, ec2.Port.all_tcp()
@@ -60,11 +61,10 @@ class DaskStack(core.Stack):
         self.elb = elb.ApplicationLoadBalancer(
             self, id="jupyterLoadBalancer", internet_facing=True, vpc=self.vpc
         )
-        self.listener = self.elb.add_listener("PublicListener", port=80, open=True)
 
     def create_worker_service(self):
         worker_task_definition = ecs.FargateTaskDefinition(
-            self, id="workerTaskDefinition", cpu=1024, memory_limit_mib=2048
+            self, id="workerTaskDefinition", cpu=4096, memory_limit_mib=16384
         )
         container = worker_task_definition.add_container(
             id="workerContainer",
@@ -75,11 +75,13 @@ class DaskStack(core.Stack):
                 "dask-worker",
                 "tcp://scheduler.local:8786",
                 "--nanny",
+                "--memory-limit",
+                "16G",
                 "--worker-port",
                 "5555",
             ],
-            cpu=1024,
-            memory_limit_mib=2048,
+            cpu=4096,
+            memory_limit_mib=16384,
             essential=True,
             logging=ecs.LogDriver.aws_logs(
                 stream_prefix="worker-", log_retention=logs.RetentionDays.ONE_DAY
@@ -103,22 +105,37 @@ class DaskStack(core.Stack):
             self,
             id="worker",
             cluster=self.cluster,
-            desired_count=2,
+            desired_count=8,
             service_name="worker",
             task_definition=worker_task_definition,
         )
         self.worker_service.enable_cloud_map(
             dns_record_type=servicediscovery.DnsRecordType.A, name="worker"
         )
+        scaling = self.worker_service.auto_scale_task_count(
+            min_capacity=8, max_capacity=18
+        )
+        scaling.scale_on_cpu_utilization(
+            id="workerCpuScaling",
+            target_utilization_percent=25,
+            disable_scale_in=True,
+            scale_out_cooldown=core.Duration.seconds(15),
+        )
+        scaling.scale_on_memory_utilization(
+            id="workerMemoryScaling",
+            target_utilization_percent=25,
+            disable_scale_in=True,
+            scale_out_cooldown=core.Duration.seconds(15),
+        )
 
     def create_scheduler_service(self):
         scheduler_task_definition = ecs.FargateTaskDefinition(
-            self, id="schedulerTaskDefinition", cpu=1024, memory_limit_mib=2048
+            self, id="schedulerTaskDefinition", cpu=2048, memory_limit_mib=4096
         )
         container = scheduler_task_definition.add_container(
             id="schedulerContainer",
-            cpu=1024,
-            memory_limit_mib=2048,
+            cpu=2048,
+            memory_limit_mib=4096,
             essential=True,
             image=ecs.ContainerImage.from_registry(
                 "docker.io/milesg/tda-daskworker:latest"
@@ -151,6 +168,32 @@ class DaskStack(core.Stack):
         self.scheduler_service.enable_cloud_map(
             dns_record_type=servicediscovery.DnsRecordType.A, name="scheduler"
         )
+
+        healthcheck = elb.HealthCheck(
+            interval=core.Duration.seconds(60),
+            path="/status",
+            timeout=core.Duration.seconds(40),
+            port="8787",
+            healthy_http_codes="200-399",
+        )
+
+        satg = elb.ApplicationTargetGroup(
+            self,
+            id="schedulerTargetGroup",
+            port=8787,
+            vpc=self.vpc,
+            protocol=elb.ApplicationProtocol.HTTP,
+            targets=[self.scheduler_service],
+            health_check=healthcheck,
+        )
+
+        listener = self.elb.add_listener(
+            "schedulerPublicListener",
+            port=8787,
+            open=True,
+            protocol=elb.ApplicationProtocol.HTTP,
+        )
+        listener.add_target_groups(id="schedulerTargetgroups", target_groups=[satg])
 
     def create_jupyter_service(self):
         jupyter_task_definition = ecs.FargateTaskDefinition(
@@ -205,16 +248,17 @@ class DaskStack(core.Stack):
             healthy_http_codes="200-399",
         )
 
-        atg = elb.ApplicationTargetGroup(
+        jatg = elb.ApplicationTargetGroup(
             self,
-            id="appTargetGroup",
+            id="jupyterTargetGroup",
             port=8888,
             vpc=self.vpc,
             protocol=elb.ApplicationProtocol.HTTP,
             targets=[self.jupyter_service],
             health_check=healthcheck,
         )
-        self.listener.add_target_groups(id="jupyterTargetgroups", target_groups=[atg])
+        listener = self.elb.add_listener("jupyterPublicListener", port=80, open=True)
+        listener.add_target_groups(id="jupyterTargetGroups", target_groups=[jatg])
 
 
 app = core.App()
