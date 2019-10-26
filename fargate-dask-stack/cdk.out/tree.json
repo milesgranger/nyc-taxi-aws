@@ -293,6 +293,10 @@
                   {
                     "id": "from awsstackschedulerSecurityGroup63FE0AE4:ALL PORTS",
                     "path": "aws-stack/worker/SecurityGroup/from awsstackschedulerSecurityGroup63FE0AE4:ALL PORTS"
+                  },
+                  {
+                    "id": "from awsstackworkerSecurityGroupC4DE48ED:ALL PORTS",
+                    "path": "aws-stack/worker/SecurityGroup/from awsstackworkerSecurityGroupC4DE48ED:ALL PORTS"
                   }
                 ]
               },

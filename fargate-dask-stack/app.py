@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from enum import Enum
 from aws_cdk import (
     aws_ec2 as ec2,
     aws_ecs as ecs,
@@ -8,6 +9,12 @@ from aws_cdk import (
     aws_logs as logs,
     core,
 )
+
+
+class Config(Enum):
+    DASK_IMG = "docker.io/milesg/tda-daskworker:1.1.0"
+    JUPYTER_IMG = "docker.io/milesg/tda-daskworker:1.1.0"
+    JUPYTER_SECRET = "supersecret"
 
 
 class DaskStack(core.Stack):
@@ -56,6 +63,9 @@ class DaskStack(core.Stack):
         self.worker_service.connections.allow_from(
             self.scheduler_service, ec2.Port.all_tcp()
         )
+        self.worker_service.connections.allow_from(
+            self.worker_service, ec2.Port.all_tcp()
+        )
 
     def setup_load_balancer(self):
         self.elb = elb.ApplicationLoadBalancer(
@@ -68,12 +78,12 @@ class DaskStack(core.Stack):
         )
         container = worker_task_definition.add_container(
             id="workerContainer",
-            image=ecs.ContainerImage.from_registry(
-                "docker.io/milesg/tda-daskworker:latest"
-            ),
+            image=ecs.ContainerImage.from_registry(Config.DASK_IMG.value),
             command=[
                 "dask-worker",
-                "tcp://scheduler.local:8786",
+                "scheduler.local:8786",
+                "--interface",
+                "eth0",
                 "--nanny",
                 "--memory-limit",
                 "16G",
@@ -137,10 +147,8 @@ class DaskStack(core.Stack):
             cpu=2048,
             memory_limit_mib=4096,
             essential=True,
-            image=ecs.ContainerImage.from_registry(
-                "docker.io/milesg/tda-daskworker:latest"
-            ),
-            command=["dask-scheduler"],
+            image=ecs.ContainerImage.from_registry(Config.DASK_IMG.value),
+            command=["dask-scheduler", "--interface", "eth0"],
             logging=ecs.LogDriver.aws_logs(
                 stream_prefix="scheduler-", log_retention=logs.RetentionDays.ONE_DAY
             ),
@@ -204,13 +212,11 @@ class DaskStack(core.Stack):
             cpu=1024,
             memory_limit_mib=2048,
             essential=True,
-            image=ecs.ContainerImage.from_registry(
-                "docker.io/milesg/tda-daskworker:latest"
-            ),
+            image=ecs.ContainerImage.from_registry(Config.JUPYTER_IMG.value),
             command=[
                 "jupyter",
                 "notebook",
-                "--NotebookApp.token=supersecret",
+                f"--NotebookApp.token={Config.JUPYTER_SECRET.value}",
                 "--ip",
                 "0.0.0.0",
                 "--no-browser",
