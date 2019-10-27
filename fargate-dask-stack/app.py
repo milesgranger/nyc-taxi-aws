@@ -12,8 +12,8 @@ from aws_cdk import (
 
 
 class Config(Enum):
-    DASK_IMG = "docker.io/milesg/tda-daskworker:1.1.0"
-    JUPYTER_IMG = "docker.io/milesg/tda-daskworker:1.1.0"
+    DASK_IMG = "docker.io/milesg/tda-daskworker:1.1.1"
+    JUPYTER_IMG = "docker.io/milesg/tda-daskworker:1.1.1"
     JUPYTER_SECRET = "supersecret"
 
 
