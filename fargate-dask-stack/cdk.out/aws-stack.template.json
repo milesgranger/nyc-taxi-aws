@@ -551,7 +551,7 @@
             ],
             "Cpu": 4096,
             "Essential": true,
-            "Image": "docker.io/milesg/tda-daskworker:1.1.0",
+            "Image": "docker.io/milesg/tda-daskworker:1.1.1",
             "LogConfiguration": {
               "LogDriver": "awslogs",
               "Options": {
@@ -911,7 +911,7 @@
             ],
             "Cpu": 2048,
             "Essential": true,
-            "Image": "docker.io/milesg/tda-daskworker:1.1.0",
+            "Image": "docker.io/milesg/tda-daskworker:1.1.1",
             "LogConfiguration": {
               "LogDriver": "awslogs",
               "Options": {
@@ -1243,7 +1243,7 @@
             ],
             "Cpu": 1024,
             "Essential": true,
-            "Image": "docker.io/milesg/tda-daskworker:1.1.0",
+            "Image": "docker.io/milesg/tda-daskworker:1.1.1",
             "LogConfiguration": {
               "LogDriver": "awslogs",
               "Options": {

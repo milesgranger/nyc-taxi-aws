@@ -115,7 +115,7 @@ class DaskStack(core.Stack):
             self,
             id="worker",
             cluster=self.cluster,
-            desired_count=8,
+            desired_count=12,
             service_name="worker",
             task_definition=worker_task_definition,
         )
@@ -123,19 +123,19 @@ class DaskStack(core.Stack):
             dns_record_type=servicediscovery.DnsRecordType.A, name="worker"
         )
         scaling = self.worker_service.auto_scale_task_count(
-            min_capacity=8, max_capacity=18
+            min_capacity=12, max_capacity=18
         )
         scaling.scale_on_cpu_utilization(
             id="workerCpuScaling",
             target_utilization_percent=25,
             disable_scale_in=True,
-            scale_out_cooldown=core.Duration.seconds(15),
+            scale_out_cooldown=core.Duration.seconds(30),
         )
         scaling.scale_on_memory_utilization(
             id="workerMemoryScaling",
             target_utilization_percent=25,
             disable_scale_in=True,
-            scale_out_cooldown=core.Duration.seconds(15),
+            scale_out_cooldown=core.Duration.seconds(30),
         )
 
     def create_scheduler_service(self):
