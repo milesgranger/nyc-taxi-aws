@@ -115,7 +115,7 @@ class DaskStack(core.Stack):
             self,
             id="worker",
             cluster=self.cluster,
-            desired_count=12,
+            desired_count=15,
             service_name="worker",
             task_definition=worker_task_definition,
         )
@@ -123,7 +123,7 @@ class DaskStack(core.Stack):
             dns_record_type=servicediscovery.DnsRecordType.A, name="worker"
         )
         scaling = self.worker_service.auto_scale_task_count(
-            min_capacity=12, max_capacity=18
+            min_capacity=15, max_capacity=18
         )
         scaling.scale_on_cpu_utilization(
             id="workerCpuScaling",
