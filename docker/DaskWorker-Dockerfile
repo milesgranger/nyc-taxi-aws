@@ -1,11 +1,12 @@
 FROM python:3.6
 RUN apt update
 RUN apt install -y git graphviz
-RUN pip install --upgrade pip==10.0.1
+RUN pip install --upgrade pip
 WORKDIR /code
-COPY ./requirements.txt /code/
+COPY ./requirements.txt .
 RUN pip install -r ./requirements.txt
-COPY . /code
+COPY ./core .
+COPY ./notebooks .
 ENV PATH /usr/bin/python:$PATH
 ENV PYTHONPATH /code
 
