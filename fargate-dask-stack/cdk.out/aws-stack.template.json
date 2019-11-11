@@ -678,7 +678,7 @@
           "MaximumPercent": 200,
           "MinimumHealthyPercent": 50
         },
-        "DesiredCount": 8,
+        "DesiredCount": 15,
         "EnableECSManagedTags": false,
         "LaunchType": "FARGATE",
         "NetworkConfiguration": {
@@ -807,7 +807,7 @@
       "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
       "Properties": {
         "MaxCapacity": 18,
-        "MinCapacity": 8,
+        "MinCapacity": 15,
         "ResourceId": {
           "Fn::Join": [
             "",
@@ -859,7 +859,7 @@
           "PredefinedMetricSpecification": {
             "PredefinedMetricType": "ECSServiceAverageCPUUtilization"
           },
-          "ScaleOutCooldown": 15,
+          "ScaleOutCooldown": 30,
           "TargetValue": 25
         }
       }
@@ -877,7 +877,7 @@
           "PredefinedMetricSpecification": {
             "PredefinedMetricType": "ECSServiceAverageMemoryUtilization"
           },
-          "ScaleOutCooldown": 15,
+          "ScaleOutCooldown": 30,
           "TargetValue": 25
         }
       }
