@@ -17,7 +17,7 @@ dask-searchcv==0.2.0
 dask-xgboost==0.1.9
 decorator==4.4.0
 defusedxml==0.6.0
-distributed==2.6.0
+distributed==2021.10.0
 docutils==0.15.2
 entrypoints==0.3
 fsspec==0.5.2
